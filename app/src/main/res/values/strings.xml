@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Rakna</string>
+    <string name="address">Address: </string>
+    <string name="free">Free: </string>
 </resources>
