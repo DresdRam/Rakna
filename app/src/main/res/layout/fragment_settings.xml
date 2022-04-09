@@ -61,13 +61,12 @@
 
         <Button
             android:id="@+id/button_logout"
-            android:layout_width="match_parent"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/round_button"
-            android:text="@string/logout"
-            android:layout_centerVertical="true"/>
+            android:text="@string/logout" />
 
     </RelativeLayout>
 
