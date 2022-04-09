@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ParkingPlaceActivity"
-    android:background="@color/primaryColor">
+    android:background="@color/primaryColor"
+    tools:context=".ParkingPlaceActivity">
 
     <ImageButton
         android:id="@+id/button_back_arrow"
@@ -15,37 +15,39 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/ic_back_arrow"/>
+        android:background="@drawable/ic_back_arrow" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/image_location_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/button_back_arrow"
         android:layout_alignParentStart="true"
         android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/ic_location_icon"
-        android:layout_below="@id/button_back_arrow"/>
+        android:backgroundTint="@color/white"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/image_car_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/image_location_icon"
         android:layout_alignParentStart="true"
         android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/ic_car_icon"
-        android:layout_below="@id/image_location_icon"/>
+        android:backgroundTint="@color/white"/>
 
     <TextView
         android:id="@+id/textView_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_marginTop="15dp"
+        android:layout_below="@id/button_back_arrow"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_toEndOf="@id/image_location_icon"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -53,38 +55,48 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:layout_below="@id/button_back_arrow"
-        android:layout_toEndOf="@id/image_location_icon"/>
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/textView_free"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="15dp"
         android:layout_below="@id/image_location_icon"
-        android:layout_toEndOf="@id/image_car_icon"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/image_car_icon"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_parking_module_background"
         android:layout_below="@id/image_car_icon"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_parking_module_background">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_parking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rv_parking"
-            android:overScrollMode="never"
             android:layout_marginTop="30dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:overScrollMode="never"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/circular_progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        app:indicatorSize="50dp"
+        app:indicatorColor="@color/primaryColor"/>
 
 </RelativeLayout>

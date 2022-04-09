@@ -14,12 +14,18 @@
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_middle.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_right.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_shape.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_location_icon.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_parking_module_background.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_place_shape.xml" value="0.156" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/parkin_module_background.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/png1.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/round_button.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/settings_background_shape.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/settings_background_shape2.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_parking_place.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/car_item.xml" value="0.14895833333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/fragment_settings.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/xml/root_preferences.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

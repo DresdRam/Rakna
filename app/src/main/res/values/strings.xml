@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Rakna</string>
     <string name="address">Address: </string>
-    <string name="free">Free: </string>
+    <string name="full">Full</string>
+    <string name="language">Language</string>
+    <string name="logout">Logout</string>
 </resources>

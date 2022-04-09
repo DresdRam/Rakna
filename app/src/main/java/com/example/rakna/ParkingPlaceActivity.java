@@ -1,27 +1,19 @@
 package com.example.rakna;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +32,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     ImageButton backButton;
     ImageView currentAnimatedCar;
     TextView currentAnimatedTV;
+    CircularProgressIndicator loadingAnimation;
     private ArrayList<Car> parkedCars;
     private ArrayList<Boolean> booleanParkedCars;
     private ArrayList<Boolean> tempBooleanParkedCars;
@@ -58,6 +51,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_parking_place);
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         firstTimeData = false;
+        loadingAnimation = findViewById(R.id.circular_progress_indicator);
         random = new Random();
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child("Module1");
@@ -77,6 +71,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
             }
         });
 
+        startLoadingAnimation();
         setupFireBase();
     }
 
@@ -87,7 +82,13 @@ public class ParkingPlaceActivity extends AppCompatActivity {
                 parkingPlace = dataSnapshot.getValue(ParkingPlace.class);
                 assert parkingPlace != null;
                 booleanParkedCars = parkingPlace.getPositions();
-                freeTextView.setText(String.valueOf(parkingPlace.getFree()));
+                if(parkingPlace.getFree() == parkingPlace.getTotal()){
+                    freeTextView.setText(getResources().getString(R.string.full));
+                    freeTextView.setTextColor(getResources().getColor(R.color.red));
+                }else{
+                    freeTextView.setText(String.valueOf(parkingPlace.getFree()));
+                    freeTextView.setTextColor(getResources().getColor(R.color.white));
+                }
 
                 if(!firstTimeData){
                     firstTimeData = true;
@@ -190,6 +191,15 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         mAdapter = new CarsAdapter(this, parkedCars, clickListener, columns);
         carsRecyclerview.setAdapter(mAdapter);
         carsRecyclerview.setLayoutManager(new GridLayoutManager(this, columns));
+        stopLoadingAnimation();
+    }
+
+    private void startLoadingAnimation(){
+        loadingAnimation.show();
+    }
+
+    private void stopLoadingAnimation(){
+        loadingAnimation.hide();
     }
 
     ItemClickListener clickListener = new ItemClickListener() {
