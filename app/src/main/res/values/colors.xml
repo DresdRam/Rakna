@@ -11,4 +11,6 @@
     <color name="green">#FF378805</color>
     <color name="cardViewBackground">#FFC5C5C5</color>
     <color name="primaryColor">#FF7f80d3</color>
+    <color name="primary">#1A374D</color>
+    <color name="primarycolor">#6998AB</color>
 </resources>
