@@ -42,7 +42,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Car car = carsData.get(position);
 
-        if(c == 1){
+        if(c == 1 && c != columns){
             holder.layout.setBackgroundResource(R.drawable.ic_cardview_background_left);
             c++;
         }

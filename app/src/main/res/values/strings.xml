@@ -15,5 +15,7 @@
     <string name="NewDriver">New Driver ?!</string>
     <string name="RegIntentText">Sign Up</string>
     <string name="address">Address: </string>
-    <string name="free">Free: </string>
+    <string name="full">Full</string>
+    <string name="language">Language</string>
+    <string name="logout">Logout</string>
 </resources>
