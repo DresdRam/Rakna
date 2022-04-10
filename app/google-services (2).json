@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "465072473463",
+    "firebase_url": "https://smart-parking-cba88-default-rtdb.firebaseio.com",
+    "project_id": "smart-parking-cba88",
+    "storage_bucket": "smart-parking-cba88.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465072473463:android:3f94c0d2b33056b32acd72",
+        "android_client_info": {
+          "package_name": "com.example.rakna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465072473463-5pd2ncscten00dplpj97qc43ic2qndj7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rakna",
+            "certificate_hash": "3ae4b7f82d1a4bfdd650740626b31cd769fa65cd"
+          }
+        },
+        {
+          "client_id": "465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK_GlNN4Tw8HqNnUCIUiU9ReXpXbI-FWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
