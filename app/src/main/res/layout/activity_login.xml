@@ -52,17 +52,6 @@
         app:layout_constraintVertical_bias="0.17000002"
         app:srcCompat="@drawable/ic_line_6" />
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="57dp"
-        android:layout_height="53dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.66"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:layout_constraintVertical_bias="0.110000014"
-        app:srcCompat="@drawable/ic__34722_facebook_icon" />
 
     <ImageView
         android:id="@+id/signWithGoogle"
@@ -70,7 +59,6 @@
         android:layout_height="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:layout_constraintVertical_bias="0.120000005"
@@ -87,7 +75,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:layout_constraintVertical_bias="0.43" />
 
     <TextView
         android:id="@+id/loginIntent_btn"
@@ -108,7 +97,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:hint="@string/LoginName"
         app:boxStrokeColor="@color/white"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/white"
@@ -121,9 +109,10 @@
         app:startIconDrawable="@drawable/ic_baseline_person_24">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_email"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="Name" />
+            android:hint="@string/RegisterEmail" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -142,6 +131,7 @@
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_password"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:hint="@string/LoginPassword"
@@ -151,7 +141,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/log_Btn"
         android:layout_width="153dp"
         android:layout_height="50dp"
         android:text="Log in"
@@ -182,5 +172,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.01999998" />
 
-
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.FadingCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:SpinKit_Color="@color/primarycolor"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginIntent_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

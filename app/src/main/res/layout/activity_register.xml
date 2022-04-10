@@ -22,7 +22,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:hint="@string/RegisterName"
+
         app:boxStrokeColor="@color/white"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/white"
@@ -37,7 +37,7 @@
             android:id="@+id/reg_name"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="Name" />
+            android:hint="@string/RegisterName" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -91,6 +91,7 @@
         android:layout_width="300dp"
         android:layout_height="70dp"
         app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white"
         app:endIconMode="clear_text"
         app:layout_constraintBottom_toBottomOf="@+id/imageView11"
         app:layout_constraintEnd_toEndOf="@+id/imageView11"
@@ -165,4 +166,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.00999999" />
 
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit2"
+        style="@style/SpinKitView.FadingCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:SpinKit_Color="@color/primarycolor"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUp_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

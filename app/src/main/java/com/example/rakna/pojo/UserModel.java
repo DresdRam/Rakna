@@ -1,4 +1,4 @@
-package com.example.rakna;
+package com.example.rakna.pojo;
 
 public class UserModel {
     private String userUid;

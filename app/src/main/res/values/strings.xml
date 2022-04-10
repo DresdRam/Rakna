@@ -14,4 +14,6 @@
     <string name="LoginPassword">Password</string>
     <string name="NewDriver">New Driver ?!</string>
     <string name="RegIntentText">Sign Up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
