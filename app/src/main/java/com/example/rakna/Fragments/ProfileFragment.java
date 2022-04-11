@@ -3,6 +3,7 @@ package com.example.rakna.Fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,14 +11,18 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,8 +31,11 @@ import com.example.rakna.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -47,6 +55,7 @@ public class ProfileFragment extends Fragment {
 CircleImageView profileImage;
 TextInputEditText name,email,password,phone;
 TextView username;
+Button update;
 View view;
 Uri imageUri;
 StorageReference storageReference;
@@ -58,8 +67,66 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_profile, container, false);
         initComponent();
+        name.addTextChangedListener(textWatcher);
+        email.addTextChangedListener(textWatcher);
+        password.addTextChangedListener(textWatcher);
+        phone.addTextChangedListener(textWatcher);
         profileImageAction();
         return view;
+    }
+
+    private TextWatcher textWatcher=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (name.getText().length()>i2||password.getText().length()>i2
+                    ||phone.getText().length()>i2||password.getText().length()>i2){
+                update.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        retrieveData();
+    }
+
+    private void retrieveData(){
+        reference= FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid());
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String retrieved_name=snapshot.child("userName").getValue(String.class);
+                    String retrieved_email=snapshot.child("userEmail").getValue(String.class);
+                    String retrieved_phone=snapshot.child("userPhone").getValue(String.class);
+                    String retrieved_password=snapshot.child("userPassward").getValue(String.class);
+                    String retrieved_uri=snapshot.child("uri").getValue(String.class);
+
+                    Picasso.get().load(retrieved_uri).into(profileImage);
+                    name.setText(retrieved_name);
+                    email.setText(retrieved_email);
+                    password.setText(retrieved_password);
+                    phone.setText(retrieved_phone);
+                    username.setText(retrieved_name);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     private void initComponent(){
         profileImage =view.findViewById(R.id.profile_image);
@@ -68,6 +135,7 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
         password=view.findViewById(R.id.edit_password);
         phone=view.findViewById(R.id.edit_phone);
         username=view.findViewById(R.id.retrieved_name);
+        update=view.findViewById(R.id.update_button);
     }
     private void profileImageAction(){
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +199,7 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
                     @Override
                     public void onSuccess(Uri uri) {
                         reference= FirebaseDatabase.getInstance()
-                                .getReference("users").child(auth.getCurrentUser().getUid());
+                                .getReference("Users").child(auth.getCurrentUser().getUid()).child("uri");
                         reference.setValue(uri.toString());
 
                     }

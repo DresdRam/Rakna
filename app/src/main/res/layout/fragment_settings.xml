@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsFragment"
+    tools:context=".Fragments.SettingsFragment"
     android:background="@color/cardViewBackground">
 
     <RelativeLayout
@@ -11,13 +11,13 @@
         android:layout_height="200dp"
         android:background="@drawable/settings_background_shape">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageView_settings_userImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
-            android:src="@drawable/ic_user_icon"/>
+            android:src="@drawable/ic_user_icon" />
 
         <TextView
             android:id="@+id/textView_settings_userName"
@@ -53,20 +53,21 @@
             android:id="@+id/spinner_settings_languages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
             android:layout_toEndOf="@id/textview_language"
-            android:entries="@array/language_entries"/>
+            android:entries="@array/language_entries" />
 
         <Button
             android:id="@+id/button_logout"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:background="@drawable/round_button"
-            android:text="@string/logout" />
+            android:text="@string/logout"
+            android:textAllCaps="false" />
 
     </RelativeLayout>
 
