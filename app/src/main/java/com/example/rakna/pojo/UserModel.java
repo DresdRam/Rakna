@@ -3,14 +3,18 @@ package com.example.rakna.pojo;
 public class UserModel {
     private String userUid;
     private String userName;
-    private String userPassward;
+    private String userPassword;
     private String userEmail;
     private String userPhone;
 
-    public UserModel(String userUid, String userName, String userPassward, String userEmail, String userPhone) {
+    public UserModel(){
+
+    }
+
+    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone) {
         this.userUid = userUid;
         this.userName = userName;
-        this.userPassward = userPassward;
+        this.userPassword = userPassword;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
     }
@@ -31,12 +35,12 @@ public class UserModel {
         this.userName = userName;
     }
 
-    public String getUserPassward() {
-        return userPassward;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUserPassward(String userPassward) {
-        this.userPassward = userPassward;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getUserEmail() {

@@ -53,7 +53,7 @@
             android:id="@+id/edit_name"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterName" />
+            android:hint="@string/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -74,7 +74,7 @@
                 android:id="@+id/edit_email"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterEmail" />
+                android:hint="@string/email" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -95,7 +95,7 @@
                 android:id="@+id/edit_password"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterPassword"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,7 +117,7 @@
                 android:id="@+id/edit_phone"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterPhone" />
+                android:hint="@string/phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

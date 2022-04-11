@@ -82,7 +82,7 @@
         android:id="@+id/loginIntent_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/RegIntentText"
+        android:text="@string/signUp"
         android:textColor="@color/primarycolor"
         android:textSize="18dp"
         android:textStyle="bold"
@@ -112,7 +112,7 @@
             android:id="@+id/log_email"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterEmail" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -134,7 +134,7 @@
             android:id="@+id/log_password"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/LoginPassword"
+            android:hint="@string/password"
             android:inputType="textPassword"
 
             />
@@ -158,9 +158,7 @@
         android:id="@+id/textView"
         android:layout_width="251dp"
         android:layout_height="80dp"
-        android:text="Let's Park Your
-
-        Car Now"
+        android:text="@string/LetParkText"
         android:textColor="@color/primary"
         android:textSize="35dp"
         android:textStyle="bold"

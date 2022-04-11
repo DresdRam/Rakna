@@ -7,9 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.rakna.Fragments.HomeFragemt;
+import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
-import com.example.rakna.Fragments.SettingFragment;
+import com.example.rakna.Fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -28,7 +28,7 @@ BottomNavigationView navigationView;
     }
     //First Fragment when Home Activity open
     private void homeFragmentTransaction(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.body_container,new HomeFragemt()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.body_container,new HomeFragment()).commit();
         navigationView.setSelectedItemId(R.id.nav_home);
     }
     //this method to handle transaction between Fragments
@@ -39,13 +39,13 @@ BottomNavigationView navigationView;
                 Fragment fragment =null;
                 switch (menuItem.getItemId()){
                     case R.id.nav_home:
-                        fragment=new HomeFragemt();
+                        fragment=new HomeFragment();
                         break;
                     case R.id.nav_profile:
                         fragment=new ProfileFragment();
                         break;
                     case R.id.nav_setting:
-                        fragment=new SettingFragment();
+                        fragment=new SettingsFragment();
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.body_container,fragment).commit();
 

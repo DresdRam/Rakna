@@ -37,7 +37,7 @@
             android:id="@+id/reg_name"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterName" />
+            android:hint="@string/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -59,7 +59,7 @@
             android:id="@+id/reg_email"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterEmail" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -81,7 +81,7 @@
             android:id="@+id/reg_password"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterPassword"
+            android:hint="@string/password"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,7 +104,7 @@
             android:id="@+id/reg_phone"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterPhone" />
+            android:hint="@string/phone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -112,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button"
-        android:text="@string/signUp_btn"
+        android:text="@string/signUp"
         android:textAllCaps="false"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -125,7 +125,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/AlreadyParking"
+        android:text="@string/haveAnAccount"
         android:textColor="@color/primary"
         android:textSize="18dp"
         android:textStyle="bold"
@@ -140,7 +140,7 @@
         android:id="@+id/registerIntent_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/IntentText"
+        android:text="@string/logIn"
         android:textColor="@color/primarycolor"
         android:textSize="18dp"
         android:textStyle="bold"

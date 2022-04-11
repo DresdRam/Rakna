@@ -3,10 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/custom_button.xml" value="0.124" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/empty_shape.xml" value="0.1585" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_five.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_four.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_icon.xml" value="0.1585" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_location.xml" value="0.1415" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_location_icon.xml" value="0.1585" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_one.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_three.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_car_two.xml" value="0.1735" />
@@ -14,12 +18,44 @@
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_middle.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_right.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_cardview_background_shape.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_frame.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_google_04.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_group_11.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_icon.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_launcher_background.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_let_s_park_your_car_now.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_line_6.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_location_icon.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_parking_location_icon.xml" value="0.1585" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_parking_module_background.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_place_shape.xml" value="0.156" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_rectangle6.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_rectangle8.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_rectangle_5.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_splashscreen.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_user_icon.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_vector.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/ic_welcometext.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/item_selector.xml" value="0.124" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/parkin_module_background.xml" value="0.1735" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/png1.xml" value="0.1735" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/profile_image.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/round_button.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/round_corner.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/settings_background_shape.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/drawable/settings_background_shape2.xml" value="0.124" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_login.xml" value="0.136" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_main2.xml" value="0.14895833333333333" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_parking_place.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/activity_register.xml" value="0.136" />
         <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/car_item.xml" value="0.14895833333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/fragment_home_fragemt.xml" value="0.14895833333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/fragment_profile.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/fragment_setting.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/layout/fragment_settings.xml" value="0.13632246376811594" />
+        <entry key="..\:/Users/snipe/AndroidStudioProjects/Rakna/app/src/main/res/menu/bottom_menu.xml" value="0.14895833333333333" />
       </map>
     </option>
   </component>

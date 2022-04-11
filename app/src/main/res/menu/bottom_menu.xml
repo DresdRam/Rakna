@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Home"
-    android:id="@+id/nav_home"
-    android:icon="@drawable/ic_baseline_home_24"
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_baseline_home_24"
         />
     <item android:title="Profile"
         android:id="@+id/nav_profile"
