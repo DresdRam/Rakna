@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         get();
         user = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference("Users");
-        model = new UserModel(user.getUid(), get_name, get_password, get_email, get_phone);
+        model = new UserModel(user.getUid(), get_name, get_password, get_email, get_phone, "");
         ref.child(user.getUid()).setValue(model);
     }
 

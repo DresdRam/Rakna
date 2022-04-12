@@ -24,4 +24,5 @@
     <string name="language">Language</string>
     <string name="logout">Log Out</string>
     <string name="full">Full</string>
+    <string name="web_client_id" translatable="false">465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com</string>
 </resources>

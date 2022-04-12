@@ -12,6 +12,12 @@ import android.widget.Button;
 
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsFragment extends Fragment {
@@ -34,7 +40,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void signOutUser() {
-        FirebaseAuth.getInstance().signOut();
+        AuthUI.getInstance().signOut(getActivity());
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
 
