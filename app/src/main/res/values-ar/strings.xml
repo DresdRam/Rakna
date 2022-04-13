@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ركنة</string>
+    <string name="LetParkText">دعنا نركن لك سيارتك الان</string>
+    <string name="WelcomeForNew">اهلا بك في سائق جديد</string>
+    <string name="name">الاسم</string>
+    <string name="email">البريد الالكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="phone">الهاتف</string>
+    <string name="logIn">تسجيل الدخول</string>
+    <string name="newDriver">سائق جديد؟</string>
+    <string name="signUp">التسجيل</string>
+    <string name="haveAnAccount">لديك حساب بالفعل؟</string>
+    <string name="language">اللغة</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="full">ممتلئ</string>
+    <string name="permissionsNeeded">نحتاج للاذن</string>
+    <string name="thisAppNeedsLocationPermission">هذا التطبيق يحتاج للسماح باذونات تحديد الموقع لكي يعمل</string>
+    <string name="accept">سماح</string>
+    <string name="decline">رفض</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="update">تحديث</string>
+</resources>

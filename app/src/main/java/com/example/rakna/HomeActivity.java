@@ -7,52 +7,56 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.rakna.Fragments.HomeFragemt;
+import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
 import com.example.rakna.Fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
-BottomNavigationView navigationView;
+    BottomNavigationView navigationView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleHelper.setAppLanguage(HomeActivity.this);
         setContentView(R.layout.activity_home);
         initComponent();
-        HomeFragemt homeFragemt=new HomeFragemt();
-        SettingsFragment settingsFragment =new SettingsFragment();
-        ProfileFragment profileFragment=new ProfileFragment();
+        HomeFragment homeFragment = new HomeFragment();
+        SettingsFragment settingsFragment = new SettingsFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
         homeFragmentTransaction();
-        navigationViewAction(homeFragemt,profileFragment,settingsFragment);
+        navigationViewAction(homeFragment, profileFragment, settingsFragment);
     }
+
     // declare the main component
-    private void initComponent(){
-        navigationView =findViewById(R.id.bottom_navigation);
+    private void initComponent() {
+        navigationView = findViewById(R.id.bottom_navigation);
     }
+
     //First Fragment when Home Activity open
-    private void homeFragmentTransaction(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.body_container,new HomeFragemt()).commit();
+    private void homeFragmentTransaction() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.body_container, new HomeFragment()).commit();
         navigationView.setSelectedItemId(R.id.nav_home);
     }
+
     //this method to handle transaction between Fragments
-    private void navigationViewAction(HomeFragemt homeFragemt,ProfileFragment profileFragment,SettingsFragment settingsFragment){
+    private void navigationViewAction(HomeFragment homeFragment, ProfileFragment profileFragment, SettingsFragment settingsFragment) {
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment =null;
-                switch (menuItem.getItemId()){
+                Fragment fragment = null;
+                switch (menuItem.getItemId()) {
                     case R.id.nav_home:
-                        fragment=homeFragemt;
+                        fragment = homeFragment;
                         break;
                     case R.id.nav_profile:
-                        fragment=profileFragment;
+                        fragment = profileFragment;
                         break;
                     case R.id.nav_setting:
-                        fragment=settingsFragment;
+                        fragment = settingsFragment;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.body_container,fragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.body_container, fragment).commit();
 
                 return true;
             }

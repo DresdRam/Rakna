@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -28,6 +30,8 @@ import android.widget.TextView;
 
 import com.example.rakna.HomeActivity;
 import com.example.rakna.R;
+import com.example.rakna.pojo.MainViewModel;
+import com.example.rakna.pojo.UserModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,20 +56,21 @@ import okhttp3.internal.Util;
 
 
 public class ProfileFragment extends Fragment {
-CircleImageView profileImage;
-TextInputEditText name,email,password,phone;
-TextView username;
-Button update;
-View view;
-Uri imageUri;
-StorageReference storageReference;
-DatabaseReference reference;
-FirebaseAuth auth=FirebaseAuth.getInstance();
+    CircleImageView profileImage;
+    TextInputEditText name, email, password, phone;
+    TextView username;
+    Button update;
+    View view;
+    Uri imageUri;
+    StorageReference storageReference;
+    DatabaseReference reference;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    private MainViewModel mainViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         initComponent();
         name.addTextChangedListener(textWatcher);
         email.addTextChangedListener(textWatcher);
@@ -75,7 +80,7 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
         return view;
     }
 
-    private TextWatcher textWatcher=new TextWatcher() {
+    private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -83,97 +88,96 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (name.getText().length()>i2||password.getText().length()>i2
-                    ||phone.getText().length()>i2||password.getText().length()>i2){
+            if (name.getText().length() > i2 || password.getText().length() > i2
+                    || phone.getText().length() > i2 || password.getText().length() > i2) {
                 update.setEnabled(true);
             }
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
-
         }
     };
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         retrieveData();
     }
 
-    private void retrieveData(){
-        reference= FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid());
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void retrieveData() {
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainViewModel.init();
+        mainViewModel.getProfile().observe(this, new Observer<UserModel>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    String retrieved_name=snapshot.child("userName").getValue(String.class);
-                    String retrieved_email=snapshot.child("userEmail").getValue(String.class);
-                    String retrieved_phone=snapshot.child("userPhone").getValue(String.class);
-                    String retrieved_password=snapshot.child("userPassward").getValue(String.class);
-                    String retrieved_uri=snapshot.child("uri").getValue(String.class);
-
-                    Picasso.get().load(retrieved_uri).into(profileImage);
-                    name.setText(retrieved_name);
-                    email.setText(retrieved_email);
-                    password.setText(retrieved_password);
-                    phone.setText(retrieved_phone);
-                    username.setText(retrieved_name);
-
+            public void onChanged(UserModel userModel) {
+                username.setText(userModel.getUserName());
+                name.setText(userModel.getUserName());
+                email.setText(userModel.getUserEmail());
+                password.setText(userModel.getUserPassword());
+                phone.setText(userModel.getUserPhone());
+                if (userModel.getUri() != null) {
+                    Picasso.get().load(userModel.getUri()).into(profileImage);
+                } else {
+                    profileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image));
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
         });
     }
-    private void initComponent(){
-        profileImage =view.findViewById(R.id.profile_image);
-        name=view.findViewById(R.id.edit_name);
-        email=view.findViewById(R.id.edit_email);
-        password=view.findViewById(R.id.edit_password);
-        phone=view.findViewById(R.id.edit_phone);
-        username=view.findViewById(R.id.retrieved_name);
-        update=view.findViewById(R.id.update_button);
+
+    private void initComponent() {
+        profileImage = view.findViewById(R.id.profile_image);
+        name = view.findViewById(R.id.edit_name);
+        email = view.findViewById(R.id.edit_email);
+        password = view.findViewById(R.id.edit_password);
+        phone = view.findViewById(R.id.edit_phone);
+        username = view.findViewById(R.id.retrieved_name);
+        update = view.findViewById(R.id.update_button);
     }
-    private void profileImageAction(){
+
+    private void profileImageAction() {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean pick=true;
-                if(pick==true){
-                    if (!checkCameraPermission()){
+                boolean pick = true;
+                if (pick == true) {
+                    if (!checkCameraPermission()) {
                         requestCameraPermission();
-                        }else pickImage();
-                }else {
+                    } else pickImage();
+                } else {
                     if (!checkStoragePermission()) {
                         requestStoragePermission();
-                    }else pickImage();
+                    } else pickImage();
                 }
             }
         });
     }
-    private void requestStoragePermission(){
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-    }
-    private void requestCameraPermission(){
-        requestPermissions(new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-    }
-    private boolean checkCameraPermission(){
-        boolean res1= ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        boolean res2=ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res1&&res2;
+
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
     }
 
-    private boolean checkStoragePermission(){
-        boolean res2=ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         return res2;
     }
-    private void pickImage(){
+
+    private void pickImage() {
         CropImage.activity()
                 .start(getContext(), this);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -189,16 +193,16 @@ FirebaseAuth auth=FirebaseAuth.getInstance();
         }
     }
 
-    private void addToStorage(Uri uri){
-        storageReference= FirebaseStorage.getInstance().getReference().child("MyImages");
-        final StorageReference imageName=storageReference.child("Image1234");
+    private void addToStorage(Uri uri) {
+        storageReference = FirebaseStorage.getInstance().getReference().child("MyImages");
+        final StorageReference imageName = storageReference.child("Image1234");
         imageName.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        reference= FirebaseDatabase.getInstance()
+                        reference = FirebaseDatabase.getInstance()
                                 .getReference("Users").child(auth.getCurrentUser().getUid()).child("uri");
                         reference.setValue(uri.toString());
 

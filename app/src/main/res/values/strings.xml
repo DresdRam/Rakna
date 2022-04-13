@@ -1,24 +1,25 @@
 <resources>
     <string name="app_name">Rakna</string>
-    <string name="address">Address: </string>
-    <string name="full">Full</string>
-    <string name="language">Language</string>
-    <string name="logout">Logout</string>
-    <string name="signUp_btn">Sign Up</string>
-    <string name="register_txt">Sign up</string>
-    <string name="LoginName">Name</string>
     <string name="LetParkText">"Let's Park Your Car Now "</string>
-    <string name="WelcomeForNew">Welcome For New     Driver</string>
-    <string name="RegisterName">Name</string>
-    <string name="RegisterEmail">Email</string>
-    <string name="RegisterPassword">Password</string>
-    <string name="RegisterPhone">Phone</string>
-    <string name="IntentText">Log in</string>
-    <string name="AlreadyParking">Already Parking with us</string>
-    <string name="LoginPassword">Password</string>
-    <string name="NewDriver">New Driver ?!</string>
-    <string name="RegIntentText">Sign Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="update_buttom">Update</string>
+    <string name="WelcomeForNew">Welcome For New Driver</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="phone">Phone</string>
+    <string name="logIn">Log In</string>
+    <string name="newDriver">New Driver?</string>
+    <string name="signUp">Sign Up</string>
+    <string name="haveAnAccount">Have An Account?</string>
+    <string name="language">Language</string>
+    <string name="logout">Log Out</string>
+    <string name="full">Full</string>
+    <string name="permissionsNeeded">Permission Needed</string>
+    <string name="thisAppNeedsLocationPermission">This Application Needs Location Permissions In Order To Function</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+
+    <string name="web_client_id" translatable="false">465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="update">Update</string>
 </resources>

@@ -3,16 +3,29 @@ package com.example.rakna.pojo;
 public class UserModel {
     private String userUid;
     private String userName;
-    private String userPassward;
+    private String userPassword;
     private String userEmail;
     private String userPhone;
+    private String uri;
 
-    public UserModel(String userUid, String userName, String userPassward, String userEmail, String userPhone) {
+    public UserModel(){
+
+    }
+    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone) {
         this.userUid = userUid;
         this.userName = userName;
-        this.userPassward = userPassward;
+        this.userPassword = userPassword;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
+    }
+
+    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone, String uri) {
+        this.userUid = userUid;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.uri = uri;
     }
 
     public String getUserUid() {
@@ -31,12 +44,12 @@ public class UserModel {
         this.userName = userName;
     }
 
-    public String getUserPassward() {
-        return userPassward;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUserPassward(String userPassward) {
-        this.userPassward = userPassward;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getUserEmail() {
@@ -53,5 +66,13 @@ public class UserModel {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

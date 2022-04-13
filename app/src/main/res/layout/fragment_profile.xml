@@ -19,15 +19,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/profile_image"
         app:layout_constraintVertical_bias="0.07999998" />
 
     <TextView
         android:id="@+id/retrieved_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="username"
-        android:textSize="30dp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +51,7 @@
             android:id="@+id/edit_name"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:hint="@string/RegisterName" />
+            android:hint="@string/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -74,7 +72,7 @@
                 android:id="@+id/edit_email"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterEmail" />
+                android:hint="@string/email" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -95,7 +93,7 @@
                 android:id="@+id/edit_password"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterPassword"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,16 +115,16 @@
                 android:id="@+id/edit_phone"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:hint="@string/RegisterPhone" />
+                android:hint="@string/phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/update_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/update_buttom"
+            android:text="@string/update"
             android:textAllCaps="false"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:enabled="false"
             android:background="@drawable/round_button"
             app:layout_constraintBottom_toBottomOf="parent"
