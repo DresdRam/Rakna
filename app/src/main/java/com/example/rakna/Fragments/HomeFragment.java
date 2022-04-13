@@ -1,7 +1,10 @@
 package com.example.rakna.Fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +13,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,10 +61,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private static final String TAG = "MapsFragment";
     private GoogleMap mMap;
     private Geocoder geocoder;
-    private int ACCESS_LOCATION_REQUEST_CODE = 10001;
+    private ActivityResultLauncher<String> mPermissionResult;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
-
     Marker userLocationMarker;
     Circle userLocationAccuracyCircle;
 
@@ -64,7 +71,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        //initialize map fragment
+
+        mPermissionResult = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                result -> {
+                    if(result) {
+                        enableUserLocation();
+                        zoomToUserLocation();
+                    } else {
+                        showAlertDialog();
+                    }
+                });
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(getActivity());
@@ -81,23 +99,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMarkerDragListener(this);
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            enableUserLocation();
-//            zoomToUserLocation();
+            enableUserLocation();
+            zoomToUserLocation();
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //We can show user a dialog why this permission is necessary
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE);
-            }
 
+            mPermissionResult.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            mPermissionResult.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
     }
 
@@ -133,20 +145,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             markerOptions.rotation(location.getBearing());
             markerOptions.anchor((float) 0.5, (float) 0.5);
             userLocationMarker = mMap.addMarker(markerOptions);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mMap.getCameraPosition().zoom));
         } else {
             //use the previously created marker
             userLocationMarker.setPosition(latLng);
             userLocationMarker.setRotation(location.getBearing());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, mMap.getCameraPosition().zoom));
         }
 
         if (userLocationAccuracyCircle == null) {
             CircleOptions circleOptions = new CircleOptions();
             circleOptions.center(latLng);
             circleOptions.strokeWidth(4);
-            circleOptions.strokeColor(Color.argb(255, 255, 0, 0));
-            circleOptions.fillColor(Color.argb(32, 255, 0, 0));
+            circleOptions.strokeColor(Color.argb(255, 30,189,255));
+            circleOptions.fillColor(Color.argb(32, 30,189,255));
             circleOptions.radius(location.getAccuracy());
             userLocationAccuracyCircle = mMap.addCircle(circleOptions);
         } else {
@@ -171,7 +183,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startLocationUpdates();
         } else {
-            // you need to request permissions...
+            mPermissionResult.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            mPermissionResult.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
     }
 
@@ -194,7 +207,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 @Override
                 public void onSuccess(Location location) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
                 }
             });
         }
@@ -245,15 +258,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ACCESS_LOCATION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                enableUserLocation();
-                zoomToUserLocation();
-            } else {
-                //We can show a dialog that permission is not granted...
-            }
-        }
+    private void showAlertDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle(getActivity().getResources().getString(R.string.permissionsNeeded))
+                .setMessage(getActivity().getResources().getString(R.string.thisAppNeedsLocationPermission))
+                .setPositiveButton(getActivity().getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(getActivity().getResources().getString(R.string.decline), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getActivity().finish();
+                    }
+                })
+                .show();
     }
 }

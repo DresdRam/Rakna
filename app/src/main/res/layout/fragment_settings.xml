@@ -29,6 +29,15 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/imageView_settings_userImage"/>
 
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spinKit_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/SpinKitView.DoubleBounce"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"/>
+
     </RelativeLayout>
 
     <RelativeLayout

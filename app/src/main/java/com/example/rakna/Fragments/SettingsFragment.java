@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
 import com.firebase.ui.auth.AuthUI;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,12 +25,14 @@ public class SettingsFragment extends Fragment {
 
     View view;
     Button logOutButton;
+    SpinKitView spinKitView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         logOutButton = view.findViewById(R.id.button_logout);
+        spinKitView = view.findViewById(R.id.spinKit_settings);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
