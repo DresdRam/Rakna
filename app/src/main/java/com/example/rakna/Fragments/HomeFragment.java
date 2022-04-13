@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.rakna.LocaleHelper;
 import com.example.rakna.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -70,6 +71,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        LocaleHelper.setAppLanguage(getActivity());
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         mPermissionResult = registerForActivityResult(

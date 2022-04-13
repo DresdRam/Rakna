@@ -18,4 +18,6 @@
     <string name="thisAppNeedsLocationPermission">هذا التطبيق يحتاج للسماح باذونات تحديد الموقع لكي يعمل</string>
     <string name="accept">سماح</string>
     <string name="decline">رفض</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
 </resources>

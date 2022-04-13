@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rakna.HomeActivity;
+import com.example.rakna.LocaleHelper;
 import com.example.rakna.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -56,6 +57,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        LocaleHelper.setAppLanguage(getActivity());
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         initComponent();
         profileImageAction();

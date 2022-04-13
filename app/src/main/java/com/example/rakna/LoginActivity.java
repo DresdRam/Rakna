@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleHelper.setAppLanguage(LoginActivity.this);
         setContentView(R.layout.activity_login);
         initComponent();
         get();

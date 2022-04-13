@@ -48,12 +48,12 @@
         app:boxStrokeColor="@color/white"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/white"
-        app:startIconDrawable="@drawable/ic_baseline_email_24"
         app:layout_constraintBottom_toBottomOf="@+id/imageView11"
         app:layout_constraintEnd_toEndOf="@+id/imageView11"
         app:layout_constraintStart_toStartOf="@+id/imageView11"
         app:layout_constraintTop_toBottomOf="@+id/reg_name_lay"
-        app:layout_constraintVertical_bias="0.04000002">
+        app:layout_constraintVertical_bias="0.04000002"
+        app:startIconDrawable="@drawable/ic_baseline_email_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/reg_email"
@@ -91,8 +91,8 @@
         android:layout_width="300dp"
         android:layout_height="70dp"
         app:boxStrokeColor="@color/white"
-        app:hintTextColor="@color/white"
         app:endIconMode="clear_text"
+        app:hintTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/imageView11"
         app:layout_constraintEnd_toEndOf="@+id/imageView11"
         app:layout_constraintStart_toStartOf="@+id/imageView11"
@@ -114,57 +114,58 @@
         android:background="@drawable/custom_button"
         android:text="@string/signUp"
         android:textAllCaps="false"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView11"
         app:layout_constraintVertical_bias="0.100000024" />
 
-    <TextView
-        android:id="@+id/textView5"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/haveAnAccount"
-        android:textColor="@color/primary"
-        android:textSize="18dp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUp_btn"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintVertical_bias="0.55">
 
-    <TextView
-        android:id="@+id/registerIntent_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logIn"
-        android:textColor="@color/primarycolor"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.04"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_btn"
-        app:layout_constraintVertical_bias="0.55" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/haveAnAccount"
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/registerIntent_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/textView5"
+            android:text="@string/logIn"
+            android:textColor="@color/primarycolor"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Welcome For new        Driver"
+        android:text="@string/WelcomeForNew"
         android:textColor="@color/primary"
-        android:textSize="35dp"
+        android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/imageView11"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.00999999" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.github.ybq.android.spinkit.SpinKitView
@@ -173,8 +174,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
+        android:layout_marginTop="10dp"
         app:SpinKit_Color="@color/primarycolor"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUp_btn" />

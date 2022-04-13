@@ -48,6 +48,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleHelper.setAppLanguage(ParkingPlaceActivity.this);
         setContentView(R.layout.activity_parking_place);
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         firstTimeData = false;

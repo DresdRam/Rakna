@@ -19,4 +19,6 @@
     <string name="decline">Decline</string>
 
     <string name="web_client_id" translatable="false">465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
 </resources>
