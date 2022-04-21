@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -28,6 +30,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.R;
@@ -98,7 +101,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMarkerDragListener(this);
 
@@ -179,6 +182,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onStart() {
         super.onStart();
+        if (!isConnected()){
+            Toast.makeText(getActivity(), "Oops,Check Your Connection Please !", Toast.LENGTH_SHORT).show();
+        }
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startLocationUpdates();
         } else {
@@ -206,7 +212,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 @Override
                 public void onSuccess(Location location) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                 }
             });
         }
@@ -276,5 +282,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     }
                 })
                 .show();
+    }
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if ((wifiConn!=null && wifiConn.isConnected()) ||(mobileConn!=null && mobileConn.isConnected())){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

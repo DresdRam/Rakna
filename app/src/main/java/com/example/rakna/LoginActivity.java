@@ -9,9 +9,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.audiofx.EnvironmentalReverb;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Virtualizer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,8 +49,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     TextView registerTxt;
@@ -76,11 +91,30 @@ public class LoginActivity extends AppCompatActivity {
                             GoogleSignInAccount acct = googleSignInResult.getSignInAccount();
                             String personName = acct.getDisplayName();
                             String personEmail = acct.getEmail();
-                            String personId = acct.getId();
                             Uri personPhoto = acct.getPhotoUrl();
-                            UserModel user = new UserModel(personId, personName, " ", personEmail, "+0000000000", personPhoto.toString());
-                            updateFirebaseData(user);
+                            UserModel user = new UserModel( personName, personEmail, "+0000000000", personPhoto.toString());
                             firebaseAuthWithGoogle(acct);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                                    Query query=databaseReference.child(auth.getCurrentUser().getUid()).orderByChild("userEmail").equalTo(personEmail);
+                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()){
+                                                if (!snapshot.getValue(String.class).equals(personEmail)){
+                                                    updateFirebaseData(user);
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+                                }
+                            },2000);
+
                         } else {
                             Log.i(TAG, googleSignInResult.toString());
                         }
@@ -92,6 +126,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if (!isConnected()){
+            showDialog();
+        }
         if (auth.getCurrentUser() != null) {
             Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -117,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signIn();
+
             }
         });
     }
@@ -217,6 +255,34 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateFirebaseData(UserModel user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(user.getUserUid()).setValue(user);
+        databaseReference.child(auth.getCurrentUser().getUid()).setValue(user);
+    }
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if ((wifiConn!=null && wifiConn.isConnected()) ||(mobileConn!=null && mobileConn.isConnected())){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    private void showDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage("Please check Your Internet Connection")
+                .setCancelable(false)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                finish();
+            }
+        });
+        builder.show();
     }
 }

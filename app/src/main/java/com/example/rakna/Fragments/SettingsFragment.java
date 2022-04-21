@@ -3,6 +3,8 @@ package com.example.rakna.Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -43,9 +46,7 @@ public class SettingsFragment extends Fragment {
     private boolean selected;
     private MainViewModel viewModel;
     View view;
-
-
-
+    FirebaseAuth auth=FirebaseAuth.getInstance();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class SettingsFragment extends Fragment {
                 //Do nothing
             }
         });
-
         return view;
     }
 
@@ -94,7 +94,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
+        if (!isConnected()){
+            Toast.makeText(context, "Oops, Check Your Connection Please!", Toast.LENGTH_SHORT).show();
+        }
         retrieveData();
     }
 
@@ -110,19 +112,30 @@ public class SettingsFragment extends Fragment {
                 } else {
                     userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
                 }
+                spinKitView.setVisibility(View.INVISIBLE);
             }
         });
-        spinKitView.setVisibility(View.INVISIBLE);
+
     }
 
     private void logoutAction() {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AuthUI.getInstance().signOut(getActivity());
+                auth.signOut();
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 getActivity().finish();
             }
         });
+    }
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if ((wifiConn!=null && wifiConn.isConnected()) ||(mobileConn!=null && mobileConn.isConnected())){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

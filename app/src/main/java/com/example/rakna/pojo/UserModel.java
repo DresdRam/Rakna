@@ -11,6 +11,20 @@ public class UserModel {
     public UserModel(){
 
     }
+
+    public UserModel(String userName, String userEmail, String userPhone, String uri) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.uri = uri;
+    }
+
+    public UserModel(String userName, String userPassword, String userPhone) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+    }
+
     public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone) {
         this.userUid = userUid;
         this.userName = userName;
