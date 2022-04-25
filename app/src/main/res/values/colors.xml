@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#1A374D</color>
     <color name="primarycolor">#6998AB</color>
+    <color name="parkingPlaceIconColor">#FF6670ad</color>
     <color name="red">#FFBD1816</color>
     <color name="green">#FF378805</color>
     <color name="cardViewBackground">#FFC5C5C5</color>

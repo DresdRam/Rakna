@@ -88,7 +88,6 @@ public class SettingsFragment extends Fragment {
         selected = false;
         userImage = view.findViewById(R.id.imageView_settings_userImage);
         username = view.findViewById(R.id.textView_settings_userName);
-
     }
 
     @Override

@@ -17,15 +17,14 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
 
     private final List<Car> carsData;
     private final Context mContext;
-    private ItemClickListener mClickListener;
+    private BottomSheetCommunicator mClickListener;
     private final int columns;
     private int c = 1;
 
     // data is passed into the constructor
-    CarsAdapter(Context context, List<Car> data, ItemClickListener itemClickListener, int columns) {
+    CarsAdapter(Context context, List<Car> data, int columns) {
         this.mContext = context;
         this.carsData = data;
-        this.mClickListener = itemClickListener;
         this.columns = columns;
     }
 
@@ -84,7 +83,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView carImage;
         TextView parkNumber;
         ConstraintLayout layout;
@@ -94,12 +93,6 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
             carImage = itemView.findViewById(R.id.iv_car);
             parkNumber = itemView.findViewById(R.id.tv_park_number);
             layout = itemView.findViewById(R.id.car_item_layout);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(getAdapterPosition() + 1);
         }
     }
 
@@ -109,7 +102,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     }
 
     // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+    void setClickListener(BottomSheetCommunicator bottomSheetCommunicator) {
+        this.mClickListener = bottomSheetCommunicator;
     }
 }
