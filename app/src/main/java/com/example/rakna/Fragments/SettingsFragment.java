@@ -38,6 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import java.util.Locale;
 
 public class SettingsFragment extends Fragment {
+
     Button logout;
     Spinner spinner;
     SpinKitView spinKitView;
@@ -46,7 +47,8 @@ public class SettingsFragment extends Fragment {
     private boolean selected;
     private MainViewModel viewModel;
     View view;
-    FirebaseAuth auth=FirebaseAuth.getInstance();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class SettingsFragment extends Fragment {
                 }
                 selected = true;
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //Do nothing
@@ -93,7 +96,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (!isConnected()){
+        if (!isConnected()) {
             Toast.makeText(context, "Oops, Check Your Connection Please!", Toast.LENGTH_SHORT).show();
         }
         retrieveData();
@@ -105,13 +108,24 @@ public class SettingsFragment extends Fragment {
         viewModel.getProfile().observe(this, new Observer<UserModel>() {
             @Override
             public void onChanged(UserModel userModel) {
-                username.setText(userModel.getUserName());
                 if (userModel.getUri() != null) {
-                    Picasso.get().load(userModel.getUri()).into(userImage);
+                    Picasso.get()
+                            .load(userModel.getUri())
+                            .into(userImage, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    spinKitView.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                                }
+                            });
                 } else {
                     userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
                 }
-                spinKitView.setVisibility(View.INVISIBLE);
+                username.setText(userModel.getUserName());
             }
         });
 
@@ -127,13 +141,14 @@ public class SettingsFragment extends Fragment {
             }
         });
     }
-    private boolean isConnected(){
-        ConnectivityManager connectivityManager=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        NetworkInfo mobileConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if ((wifiConn!=null && wifiConn.isConnected()) ||(mobileConn!=null && mobileConn.isConnected())){
+
+    private boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }

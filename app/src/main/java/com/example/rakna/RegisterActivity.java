@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //regex for name
     private boolean nameIsValid(String s) {
-        return Pattern.compile("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z])$").matcher(s).matches();
+        return Pattern.compile("^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$").matcher(s).matches();
     }
 
     //regex for phone

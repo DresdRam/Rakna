@@ -2,64 +2,52 @@ package com.example.rakna.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rakna.HomeActivity;
 import com.example.rakna.R;
 import com.example.rakna.pojo.MainViewModel;
 import com.example.rakna.pojo.UserModel;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.internal.Util;
 
 
 public class ProfileFragment extends Fragment {
+
+    SpinKitView spinKitView;
     CircleImageView profileImage;
     TextInputEditText name, password, phone;
     TextView username,userEmail;
@@ -91,6 +79,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
     private void initComponent() {
+        spinKitView = view.findViewById(R.id.spinKit_profile);
         profileImage = view.findViewById(R.id.profile_image);
         name = view.findViewById(R.id.edit_name);
         password = view.findViewById(R.id.edit_password);
@@ -132,7 +121,17 @@ public class ProfileFragment extends Fragment {
                 password.addTextChangedListener(textWatcher);
                 phone.addTextChangedListener(textWatcher);
                 if (userModel.getUri() != null) {
-                    Picasso.get().load(userModel.getUri()).into(profileImage);
+                    Picasso.get().load(userModel.getUri()).into(profileImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            spinKitView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                        }
+                    });
                 } else {
                     profileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image));
                 }
@@ -196,17 +195,11 @@ public class ProfileFragment extends Fragment {
     }
     //regex for name
     private boolean nameIsValid(String s) {
-        return Pattern.compile("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z])$").matcher(s).matches();
+        return Pattern.compile("^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$").matcher(s).matches();
     }
-
     //regex for phone
     private boolean phoneIsValid(String s) {
         return Pattern.compile("^01[0125][0-9]{8}").matcher(s).matches();
-    }
-
-    //regex for email
-    private boolean emailIsValid(String s) {
-        return Pattern.compile("^(.+)@(.+)$").matcher(s).matches();
     }
 
     private void requestStoragePermission() {
@@ -221,8 +214,7 @@ public class ProfileFragment extends Fragment {
         return res1 && res2;
     }
     private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        return res2;
+        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
     private void pickImage() {
         CropImage.activity()
