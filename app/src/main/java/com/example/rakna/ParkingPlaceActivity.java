@@ -83,23 +83,21 @@ public class ParkingPlaceActivity extends AppCompatActivity {
                 parkingPlace = dataSnapshot.getValue(ParkingPlace.class);
                 assert parkingPlace != null;
                 booleanParkedCars = parkingPlace.getPositions();
-                if(parkingPlace.getFree() == parkingPlace.getTotal()){
+                if (parkingPlace.getFree() == parkingPlace.getTotal()) {
                     freeTextView.setText(getResources().getString(R.string.full));
                     freeTextView.setTextColor(getResources().getColor(R.color.red));
-                }else{
+                } else {
                     freeTextView.setText(String.valueOf(parkingPlace.getFree()));
                     freeTextView.setTextColor(getResources().getColor(R.color.white));
                 }
 
-                if(!firstTimeData){
+                if (!firstTimeData) {
                     firstTimeData = true;
                     addressTextView.setText(parkingPlace.getAddress());
                     tempBooleanParkedCars = booleanParkedCars;
                     setupCarsData();
                     setupParkingRecyclerview();
-                }
-                else
-                {
+                } else {
                     compareBetweenLists();
                 }
             }
@@ -112,11 +110,11 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     }
 
     private void compareBetweenLists() {
-        for(int i = 0; i <= booleanParkedCars.size() - 1; i++){
-            if(booleanParkedCars.get(i) != tempBooleanParkedCars.get(i)){
-                if(booleanParkedCars.get(i)){
+        for (int i = 0; i <= booleanParkedCars.size() - 1; i++) {
+            if (booleanParkedCars.get(i) != tempBooleanParkedCars.get(i)) {
+                if (booleanParkedCars.get(i)) {
                     updatePlaceStatus(i, PARKING_CAR);
-                }else{
+                } else {
                     updatePlaceStatus(i, LEAVING_CAR);
                 }
             }
@@ -127,14 +125,13 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void updatePlaceStatus(int position, int status) {
         carsRecyclerview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             boolean animated = false;
+
             @Override
             public void onGlobalLayout() {
-                if(!animated){
-                    if(status == LEAVING_CAR){
+                if (!animated) {
+                    if (status == LEAVING_CAR) {
                         animateLeavingCar(position);
-                    }
-                    else
-                    {
+                    } else {
                         animateParkingCar(position);
                     }
                     animated = true;
@@ -143,13 +140,13 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         });
     }
 
-    private void animateLeavingCar(int position){
+    private void animateLeavingCar(int position) {
         currentAnimatedCar = carsRecyclerview.getChildAt(position).findViewById(R.id.iv_car);
         currentAnimatedTV = carsRecyclerview.getChildAt(position).findViewById(R.id.tv_park_number);
         ObjectAnimator moveAnimation;
-        if(currentAnimatedCar.getScaleX() == 1f){
+        if (currentAnimatedCar.getScaleX() == 1f) {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", 50);
-        }else {
+        } else {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", -50);
         }
         ObjectAnimator fadeAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, View.ALPHA, 1, 0);
@@ -158,15 +155,16 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         moveAnimation.start();
         fadeAnimation.start();
     }
-    private void animateParkingCar(int position){
+
+    private void animateParkingCar(int position) {
         currentAnimatedCar = carsRecyclerview.getChildAt(position).findViewById(R.id.iv_car);
         currentAnimatedTV = carsRecyclerview.getChildAt(position).findViewById(R.id.tv_park_number);
         currentAnimatedCar.setImageResource(carsDrawablesArray[random.nextInt(5)]);
         currentAnimatedCar.setVisibility(View.VISIBLE);
         ObjectAnimator moveAnimation;
-        if(currentAnimatedCar.getScaleX() == 1f){
+        if (currentAnimatedCar.getScaleX() == 1f) {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", -0);
-        }else {
+        } else {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", 0);
         }
         ObjectAnimator fadeAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, View.ALPHA, 0, 1);
@@ -181,7 +179,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
         parkedCars = new ArrayList<>();
 
-        for(int i = 0; i <= booleanParkedCars.size() - 1; i++){
+        for (int i = 0; i <= booleanParkedCars.size() - 1; i++) {
             parkedCars.add(new Car(booleanParkedCars.get(i), carsDrawablesArray[random.nextInt(5)]));
         }
     }
@@ -195,11 +193,11 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         stopLoadingAnimation();
     }
 
-    private void startLoadingAnimation(){
+    private void startLoadingAnimation() {
         loadingAnimation.show();
     }
 
-    private void stopLoadingAnimation(){
+    private void stopLoadingAnimation() {
         loadingAnimation.hide();
     }
 

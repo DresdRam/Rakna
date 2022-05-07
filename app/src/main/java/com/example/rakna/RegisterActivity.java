@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -93,9 +92,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     storeData();
                     Toast.makeText(RegisterActivity.this, "Your Register is Successful", Toast.LENGTH_SHORT).show();
-                    //startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                     spinKitView.setVisibility(View.INVISIBLE);
-                    //finish();
+                    finish();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
                     spinKitView.setVisibility(View.INVISIBLE);
@@ -109,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         get();
         user = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference("Users");
-        model = new UserModel(user.getUid(), get_name, get_password, get_email, get_phone, "");
+        model = new UserModel(user.getUid(), get_name, get_password, get_email, get_phone);
         ref.child(user.getUid()).setValue(model);
     }
 

@@ -1,29 +1,45 @@
 package com.example.rakna.pojo;
 
-import android.net.Uri;
-
-import java.net.URI;
-
 public class UserModel {
     private String userUid;
     private String userName;
     private String userPassword;
     private String userEmail;
     private String userPhone;
-    private String userImageUri;
-
+    private String uri;
 
     public UserModel(){
 
     }
 
-    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone, String userImageUri) {
+    public UserModel(String userName, String userEmail, String userPhone, String uri) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.uri = uri;
+    }
+
+    public UserModel(String userName, String userPassword, String userPhone) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+    }
+
+    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone) {
         this.userUid = userUid;
         this.userName = userName;
         this.userPassword = userPassword;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
-        this.userImageUri = userImageUri;
+    }
+
+    public UserModel(String userUid, String userName, String userPassword, String userEmail, String userPhone, String uri) {
+        this.userUid = userUid;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.uri = uri;
     }
 
     public String getUserUid() {
@@ -66,11 +82,11 @@ public class UserModel {
         this.userPhone = userPhone;
     }
 
-    public String getUserImageUri() {
-        return userImageUri;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUserImageUri(String userImageUri) {
-        this.userImageUri = userImageUri;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }
