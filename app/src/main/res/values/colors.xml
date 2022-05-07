@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#1A374D</color>
+    <color name="primaryVariant">#6998AB</color>
     <color name="parkingPlaceIconColor">#FF6670ad</color>
     <color name="red">#FFBD1816</color>
     <color name="green">#FF378805</color>
