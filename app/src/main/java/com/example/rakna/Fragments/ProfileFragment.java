@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void afterTextChanged(Editable editable) {
                         synchronized (this) {
-                            if (name.getText().toString() == userModel.getUserName() || password.getText().toString() == userModel.getUserPassword() || phone.getText().toString() == userModel.getUserPhone()) {
+                            if (name.getText().toString().equals(userModel.getUserName()) || password.getText().toString().equals(userModel.getUserPassword()) || phone.getText().toString() == userModel.getUserPhone()) {
                                 update.setEnabled(false);
                             }
                         }
@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 } else {
-                    profileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image));
+                    profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
                     spinKitView.setVisibility(View.GONE);
                 }
             }
@@ -249,6 +249,7 @@ public class ProfileFragment extends Fragment {
                         reference = FirebaseDatabase.getInstance()
                                 .getReference("Users").child(auth.getCurrentUser().getUid()).child("uri");
                         reference.setValue(uri.toString());
+
                     }
                 });
             }
