@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/navigate"
+            android:textColor="@color/black"
             android:textAlignment="center"
             android:textSize="16sp" />
 
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/spectate"
+            android:textColor="@color/black"
             android:textAlignment="center"
             android:textSize="16sp" />
 
