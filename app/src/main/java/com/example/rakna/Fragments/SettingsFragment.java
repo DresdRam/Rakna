@@ -3,9 +3,11 @@ package com.example.rakna.Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +27,8 @@ import com.example.rakna.HomeActivity;
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
-import com.example.rakna.RegisterActivity;
 import com.example.rakna.pojo.MainViewModel;
 import com.example.rakna.pojo.UserModel;
-import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
@@ -54,6 +54,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         initComponent();
+        setPreviousSelectedLang();
         logoutAction();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -152,6 +153,16 @@ public class SettingsFragment extends Fragment {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void setPreviousSelectedLang() {
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String language = shared.getString(LocaleHelper.SELECTED_LANGUAGE, LocaleHelper.ENGLISH);
+        if (language.equals(LocaleHelper.ENGLISH)) {
+            spinner.setSelection(0);
+        } else if (language.equals(LocaleHelper.ARABIC)) {
+            spinner.setSelection(1);
         }
     }
 }
