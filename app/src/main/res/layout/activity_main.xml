@@ -2,54 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_splashscreen"
     tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/textView_internet_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/noInternetConnection"
-        android:textColor="@color/red"
-        android:visibility="gone"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/layout_button"
-        android:layout_marginBottom="15dp"/>
-
-    <RelativeLayout
-        android:id="@+id/layout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/button_retry"
-            android:background="@drawable/custom_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/retry"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            android:textColor="#FFFFFF"
-            android:paddingStart="40dp"
-            android:paddingEnd="40dp"/>
-
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/progress_splash_button"
-            style="@style/SpinKitView.Circle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="invisible"/>
-
-    </RelativeLayout>
-
 </RelativeLayout>
