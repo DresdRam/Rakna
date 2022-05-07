@@ -17,9 +17,13 @@
     <string name="thisAppNeedsLocationPermission">This Application Needs Location Permissions In Order To Function</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
-
     <string name="web_client_id" translatable="false">465072473463-vcttobckdkd6e3kbg9pm06bivn427emu.apps.googleusercontent.com</string>
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
     <string name="update">Update</string>
+    <string name="navigate">Navigate</string>
+    <string name="spectate">Spectate</string>
+    <string name="parkingPlace">Parking Place</string>
+    <string name="retry">retry</string>
+    <string name="noInternetConnection">No Internet Connection</string>
 </resources>

@@ -2,7 +2,6 @@ package com.example.rakna;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,55 +10,89 @@ import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
 import com.example.rakna.Fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements BottomSheetCommunicator {
+
     BottomNavigationView navigationView;
-
+    private HomeFragment homeFragment;
+    private ProfileFragment profileFragment;
+    private SettingsFragment settingsFragment;
+    private int lastItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleHelper.setAppLanguage(HomeActivity.this);
         setContentView(R.layout.activity_home);
+
         initComponent();
-        HomeFragment homeFragment = new HomeFragment();
-        SettingsFragment settingsFragment = new SettingsFragment();
-        ProfileFragment profileFragment = new ProfileFragment();
-        homeFragmentTransaction();
-        navigationViewAction(homeFragment, profileFragment, settingsFragment);
+        addFragmentsToManager();
+        navigationViewAction();
     }
 
     // declare the main component
     private void initComponent() {
         navigationView = findViewById(R.id.bottom_navigation);
+        if (homeFragment == null) {
+            homeFragment = new HomeFragment();
+        }
+        if (profileFragment == null) {
+            profileFragment = new ProfileFragment();
+        }
+        if (settingsFragment == null) {
+            settingsFragment = new SettingsFragment();
+        }
+        navigationView.setSelectedItemId(R.id.nav_home);
+        lastItemId = R.id.nav_home;
     }
 
     //First Fragment when Home Activity open
-    private void homeFragmentTransaction() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.body_container, new HomeFragment()).commit();
-        navigationView.setSelectedItemId(R.id.nav_home);
+    private void addFragmentsToManager() {
+        getSupportFragmentManager().beginTransaction().add(R.id.body_container, profileFragment, "ProfileFragment").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.body_container, settingsFragment, "SettingsFragment").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.body_container, homeFragment, "HomeFragment").commit();
     }
 
     //this method to handle transaction between Fragments
-    private void navigationViewAction(HomeFragment homeFragment, ProfileFragment profileFragment, SettingsFragment settingsFragment) {
-        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private void navigationViewAction() {
+        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment = null;
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
-                        fragment = homeFragment;
-                        break;
-                    case R.id.nav_profile:
-                        fragment = profileFragment;
-                        break;
-                    case R.id.nav_setting:
-                        fragment = settingsFragment;
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_home) {
+                    if (lastItemId != item.getItemId()) {
+                        getSupportFragmentManager().beginTransaction().show(homeFragment).commit();
+                        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+                        getSupportFragmentManager().beginTransaction().hide(settingsFragment).commit();
+                        lastItemId = item.getItemId();
+                    }
+                } else if (item.getItemId() == R.id.nav_profile) {
+                    if (lastItemId != item.getItemId()) {
+                        getSupportFragmentManager().beginTransaction().hide(homeFragment).commit();
+                        getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
+                        getSupportFragmentManager().beginTransaction().hide(settingsFragment).commit();
+                        lastItemId = item.getItemId();
+                    }
+                } else if (item.getItemId() == R.id.nav_setting) {
+                    if (lastItemId != item.getItemId()) {
+                        getSupportFragmentManager().beginTransaction().hide(homeFragment).commit();
+                        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+                        getSupportFragmentManager().beginTransaction().show(settingsFragment).commit();
+                        lastItemId = item.getItemId();
+                    }
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.body_container, fragment).commit();
-
                 return true;
             }
         });
+    }
+
+    @Override
+    public void navigate() {
+        homeFragment.navigateToParkingPlace();
+    }
+
+    @Override
+    public void spectate() {
+        homeFragment.spectateParkingPlace();
     }
 }

@@ -55,7 +55,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         loadingAnimation = findViewById(R.id.circular_progress_indicator);
         random = new Random();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child("Module1");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
 
         addressTextView = findViewById(R.id.textView_address);
         freeTextView = findViewById(R.id.textView_free);
@@ -187,7 +187,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void setupParkingRecyclerview() {
         int columns = parkingPlace.getColumns();
         carsRecyclerview = findViewById(R.id.rv_parking);
-        mAdapter = new CarsAdapter(this, parkedCars, clickListener, columns);
+        mAdapter = new CarsAdapter(this, parkedCars, columns);
         carsRecyclerview.setAdapter(mAdapter);
         carsRecyclerview.setLayoutManager(new GridLayoutManager(this, columns));
         stopLoadingAnimation();
@@ -200,14 +200,5 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void stopLoadingAnimation() {
         loadingAnimation.hide();
     }
-
-    ItemClickListener clickListener = new ItemClickListener() {
-        @Override
-        public void onItemClick(int position) {
-            mToast.cancel();
-            mToast.setText(String.valueOf(position));
-            mToast.show();
-        }
-    };
 }
 
