@@ -130,10 +130,12 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onError(Exception e) {
                             profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                            spinKitView.setVisibility(View.GONE);
                         }
                     });
                 } else {
                     profileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image));
+                    spinKitView.setVisibility(View.GONE);
                 }
             }
         });

@@ -120,10 +120,12 @@ public class SettingsFragment extends Fragment {
                                 @Override
                                 public void onError(Exception e) {
                                     userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                                    spinKitView.setVisibility(View.GONE);
                                 }
                             });
                 } else {
                     userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                    spinKitView.setVisibility(View.GONE);
                 }
                 username.setText(userModel.getUserName());
             }
