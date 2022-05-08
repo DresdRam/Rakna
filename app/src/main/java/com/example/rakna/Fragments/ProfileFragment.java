@@ -207,8 +207,14 @@ public class ProfileFragment extends Fragment {
                             update.setEnabled(false);
                             reference.child("userName").setValue(name.getText().toString());
                             reference.child("userPhone").setValue(phone.getText().toString());
-                            reference.child("userPassword").setValue(password.getText().toString());
-                            Toast.makeText(getActivity(), "Data is Updated", Toast.LENGTH_SHORT).show();
+                            reference.child("userPassword").setValue(password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(getActivity(), "Data is Updated", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
                         } else {
                             Toast.makeText(getActivity(), "You Add Same Data", Toast.LENGTH_SHORT).show();
                         }
