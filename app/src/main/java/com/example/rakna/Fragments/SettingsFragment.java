@@ -29,7 +29,9 @@ import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
 import com.example.rakna.pojo.MainViewModel;
 import com.example.rakna.pojo.UserModel;
+import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -138,9 +140,14 @@ public class SettingsFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                auth.signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-                getActivity().finish();
+                AuthUI.getInstance().signOut(getActivity()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        startActivity(new Intent(getContext(), LoginActivity.class));
+                        getActivity().finish();
+                    }
+                });
+
             }
         });
     }

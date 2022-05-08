@@ -81,6 +81,25 @@ public class LoginActivity extends AppCompatActivity {
         signWithGoogleAction();
         logInAction();
 
+
+    }
+
+    //check user is already logged in
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUser();
+        if (!isConnected()) {
+            showDialog();
+        }
+        if (auth.getCurrentUser() != null) {
+            Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
+        }
+    }
+
+    private void checkUser() {
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -92,48 +111,38 @@ public class LoginActivity extends AppCompatActivity {
                             String personName = acct.getDisplayName();
                             String personEmail = acct.getEmail();
                             Uri personPhoto = acct.getPhotoUrl();
-                            UserModel user = new UserModel( personName, personEmail, "+0000000000", personPhoto.toString());
+                            UserModel user = new UserModel(personName, personEmail, "+0000000000", personPhoto.toString());
                             firebaseAuthWithGoogle(acct);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                                    Query query=databaseReference.child(auth.getCurrentUser().getUid()).orderByChild("userEmail").equalTo(personEmail);
+                                    Query query = databaseReference.orderByChild("userEmail").equalTo(personEmail);
                                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if (snapshot.exists()){
-                                                if (!snapshot.getValue(String.class).equals(personEmail)){
-                                                    updateFirebaseData(user);
-                                                }
+                                            if (!snapshot.exists()) {
+                                                updateFirebaseData(user);
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, "Email Already Exist", Toast.LENGTH_SHORT).show();
                                             }
+
                                         }
+
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
                                         }
                                     });
                                 }
-                            },2000);
-
+                            }, 2000);
                         } else {
                             Log.i(TAG, googleSignInResult.toString());
                         }
                     }
-                });
-    }
 
-    //check user is already logged in
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!isConnected()){
-            showDialog();
-        }
-        if (auth.getCurrentUser() != null) {
-            Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            finish();
-        }
+
+                });
+
     }
 
     //Log in button Action
@@ -228,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             LoginActivity.this.finish();
-                        }else{
+                        } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -257,18 +266,20 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(auth.getCurrentUser().getUid()).setValue(user);
     }
-    private boolean isConnected(){
-        ConnectivityManager connectivityManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        NetworkInfo mobileConn =connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if ((wifiConn!=null && wifiConn.isConnected()) ||(mobileConn!=null && mobileConn.isConnected())){
+
+    private boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
-    private void showDialog(){
-        AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage("Please check Your Internet Connection")
                 .setCancelable(false)
                 .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
@@ -279,7 +290,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
         });

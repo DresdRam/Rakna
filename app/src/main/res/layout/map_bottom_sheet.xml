@@ -13,28 +13,34 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/button_navigate"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/navigate"
             android:textColor="@color/black"
             android:textAlignment="center"
-            android:textSize="16sp" />
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button2"
+            android:textStyle="bold|italic"
+            />
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/button_spectate"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/spectate"
+            android:textStyle="italic|bold"
             android:textColor="@color/black"
             android:textAlignment="center"
-            android:textSize="16sp" />
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"
+            />
 
     </LinearLayout>
 </RelativeLayout>
