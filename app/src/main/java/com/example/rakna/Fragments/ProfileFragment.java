@@ -210,8 +210,7 @@ public class ProfileFragment extends Fragment {
                             reference.child("userPassword").setValue(password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(getActivity(), "Data is Updated", Toast.LENGTH_SHORT).show();
-
+                                    Toast.makeText(getActivity(), "Data is Updated ", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
