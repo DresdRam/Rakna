@@ -240,7 +240,7 @@ public class ProfileFragment extends Fragment {
                     password.setError(getString(R.string.enterYpassord));
                     return;
                 }
-                if (password.length() <= 6) {
+                if (!passwordIsValid(password.getText().toString())) {
                     password.setError(getString(R.string.passordShort));
                     spinKitView.setVisibility(View.INVISIBLE);
                     return;
@@ -264,6 +264,10 @@ public class ProfileFragment extends Fragment {
     //regex for phone
     private boolean phoneIsValid(String s) {
         return Pattern.compile("^01[0125][0-9]{8}").matcher(s).matches();
+    }
+
+    private boolean passwordIsValid(String s) {
+        return Pattern.compile("^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$").matcher(s).matches();
     }
 
     private void requestStoragePermission() {
