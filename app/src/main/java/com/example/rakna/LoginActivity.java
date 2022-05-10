@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             showDialog();
         }
         if (auth.getCurrentUser() != null) {
-            Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.alreadyLogin, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
         }
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (!snapshot.exists()) {
                                                 updateFirebaseData(user);
                                             } else {
-                                                Toast.makeText(LoginActivity.this, "Email Already Exist", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
                                             }
 
                                         }
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
                                 }
-                            }, 2000);
+                            }, 1000);
                         } else {
                             Log.i(TAG, googleSignInResult.toString());
                         }
@@ -212,12 +212,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Your Login is Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.loginSuccess, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     spinKitView.setVisibility(View.INVISIBLE);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.error) + task.getException(), Toast.LENGTH_SHORT).show();
                     spinKitView.setVisibility(View.INVISIBLE);
                 }
             }
@@ -233,12 +233,12 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Authentication pass.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             LoginActivity.this.finish();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

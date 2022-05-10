@@ -48,41 +48,41 @@ public class RegisterActivity extends AppCompatActivity {
     private void createUser() {
 
         if (get_name.isEmpty()) {
-            name.setError("Name is Required");
+            name.setError(getString(R.string.enterYName));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_email.isEmpty()) {
-            email.setError("Email is Required");
+            email.setError(getString(R.string.emailIsRequier));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_password.isEmpty()) {
-            password.setError("Password is Required");
+            password.setError(getString(R.string.enterYpassord));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_password.length() <= 6) {
-            password.setError("Password is to Short ");
+            password.setError(getString(R.string.passordShort));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_phone.isEmpty()) {
-            phone.setError("phone is Required");
+            phone.setError(getString(R.string.enterYPhone));
             return;
         }
         if (!nameIsValid(get_name)) {
-            name.setError("Please Enter Valid Name");
+            name.setError(getString(R.string.enterVName));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (!phoneIsValid(get_phone)) {
-            phone.setError("Please Enter Valid Number Phone");
+            phone.setError(getString(R.string.enterVNumber));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (!emailIsValid(get_email)) {
-            email.setError("Please Enter Valid Email");
+            email.setError(getString(R.string.enterVemail));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
@@ -91,12 +91,12 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     storeData();
-                    Toast.makeText(RegisterActivity.this, "Your Register is Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, R.string.registerSuccess, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                     spinKitView.setVisibility(View.INVISIBLE);
                     finish();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, getString(R.string.error) + task.getException(), Toast.LENGTH_SHORT).show();
                     spinKitView.setVisibility(View.INVISIBLE);
                 }
             }

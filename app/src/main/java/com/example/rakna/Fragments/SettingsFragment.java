@@ -14,21 +14,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.rakna.HomeActivity;
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
-import com.example.rakna.pojo.MainViewModel;
-import com.example.rakna.pojo.Repository;
 import com.example.rakna.pojo.UserModel;
 import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -52,7 +46,6 @@ public class SettingsFragment extends Fragment {
     TextView username;
     CircleImageView userImage;
     private boolean selected;
-    private MainViewModel viewModel;
     View view;
 
     @Override

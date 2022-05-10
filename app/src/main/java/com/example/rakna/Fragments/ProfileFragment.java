@@ -1,7 +1,6 @@
 package com.example.rakna.Fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -20,12 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rakna.R;
-import com.example.rakna.pojo.MainViewModel;
 import com.example.rakna.pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -73,7 +68,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     private ActivityResultLauncher<Any> activityResultLauncher;
     private ActivityResultLauncher<String[]> mPermissionResult;
-    private MainViewModel mainViewModel;
+
 
     private ActivityResultContract<Any, Uri> cropActivityResultContract;
 
@@ -142,7 +137,7 @@ public class ProfileFragment extends Fragment {
                 try {
                     Uri uri = CropImage.getActivityResult(intent).getUri();
                     return uri;
-                }catch (Exception e){
+                } catch (Exception e) {
                     return null;
                 }
             }
@@ -150,16 +145,17 @@ public class ProfileFragment extends Fragment {
     }
 
     private void retrieveData() {
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mainViewModel.init();
-        mainViewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<UserModel>() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChanged(UserModel userModel) {
-                username.setText(userModel.getUserName());
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                UserModel userModel = snapshot.getValue(UserModel.class);
                 name.setText(userModel.getUserName());
-                userEmail.setText(userModel.getUserEmail());
                 password.setText(userModel.getUserPassword());
                 phone.setText(userModel.getUserPhone());
+                username.setText(userModel.getUserName());
+                userEmail.setText(userModel.getUserEmail());
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -168,8 +164,13 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        update.setEnabled(!name.getText().toString().equals(userModel.getUserName()) || !password.getText().toString().equals(userModel.getUserPassword())
-                                || !phone.getText().toString().equals(userModel.getUserPhone()));
+
+                        if (name.getText().toString().equals(userModel.getUserName()) && password.getText().toString().equals(userModel.getUserPassword())
+                                && phone.getText().toString().equals(userModel.getUserPhone())) {
+                            update.setEnabled(false);
+                        } else {
+                            update.setEnabled(true);
+                        }
                     }
 
 
@@ -199,8 +200,15 @@ public class ProfileFragment extends Fragment {
                     profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
                     spinKitView.setVisibility(View.GONE);
                 }
+                update.setEnabled(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+
     }
 
     private void profileImageAction() {
@@ -220,23 +228,28 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!nameIsValid(name.getText().toString())) {
-                    name.setError("Enter Valid Name");
+                    name.setError(getString(R.string.enterVName));
                     return;
                 }
                 if (!phoneIsValid(phone.getText().toString())) {
-                    phone.setError("Enter Valid Number");
+                    phone.setError(getString(R.string.enterVNumber));
                     return;
                 }
                 if (name.getText().toString().isEmpty()) {
-                    name.setError("Enter Your Name");
+                    name.setError(getString(R.string.enterYName));
                     return;
                 }
                 if (phone.getText().toString().isEmpty()) {
-                    phone.setError("Enter Your Phone");
+                    phone.setError(getString(R.string.enterYPhone));
                     return;
                 }
                 if (password.getText().toString().isEmpty()) {
-                    password.setError("Enter Your Password");
+                    password.setError(getString(R.string.enterYpassord));
+                    return;
+                }
+                if (password.length() <= 6) {
+                    password.setError(getString(R.string.passordShort));
+                    spinKitView.setVisibility(View.INVISIBLE);
                     return;
                 }
                 reference = FirebaseDatabase.getInstance().
@@ -253,12 +266,19 @@ public class ProfileFragment extends Fragment {
                             reference.child("userPassword").setValue(password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(getActivity(), "Data is Updated ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.dataIsUpdated, Toast.LENGTH_SHORT).show();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            retrieveData();
+
+                                        }
+                                    },1000);
                                 }
                             });
 
                         } else {
-                            Toast.makeText(getActivity(), "You Add Same Data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.YouAddSame, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -304,23 +324,6 @@ public class ProfileFragment extends Fragment {
         activityResultLauncher.launch(null);
     }
 
-    /*
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == Activity.RESULT_OK) {
-                    imageUri = result.getUri();
-                    Picasso.get().load(imageUri).into(profileImage);
-                    addToStorage(imageUri);
-
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Exception error = result.getError();
-                    Log.e("ImageActivityResults", error.toString());
-                }
-            }
-        }
-    */
     private String getExtension(Uri uri) {
         ContentResolver resolver = getActivity().getContentResolver();
         MimeTypeMap map = MimeTypeMap.getSingleton();
