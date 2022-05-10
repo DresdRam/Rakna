@@ -26,4 +26,21 @@
     <string name="parkingPlace">موقع للركن</string>
     <string name="retry">اعادة المحاولة</string>
     <string name="noInternetConnection">لا يوجد اتصال بالانترنت</string>
+    <string name="dataIsUpdated">تم تعديل البيانات</string>
+    <string name="YouAddSame">لا يوجد اختلاف في البيانات</string>
+    <string name="enterVName">ادخل اسم لائق</string>
+    <string name="enterVNumber">ادخل رقم هاتف لائق</string>
+    <string name="enterYName">ادخل اسمك</string>
+    <string name="enterYPhone">ادخل رقم هاتفك</string>
+    <string name="enterYpassord">ادخل كلمة المرور</string>
+    <string name="emailIsRequier">البريد الالكتروني مطلوب</string>
+    <string name="passordShort">كلمة المرور قصيرة</string>
+    <string name="enterVemail">من فضلك ادخل بريد الكتروني لائق</string>
+    <string name="registerSuccess">تم التسجيل بنجاح</string>
+    <string name="error">خطا !</string>
+    <string name="emailAlready">البريد الالكتروني موجود بالفعل</string>
+    <string name="loginSuccess">تم تسجيل الدخول بنجاح</string>
+    <string name="alreadyLogin">مسجل دخولك بالفعل</string>
+    <string name="authenticationPass">تم تخطي التوثيق</string>
+    <string name="authenticathinFaild">فشل في التوثيق</string>
 </resources>

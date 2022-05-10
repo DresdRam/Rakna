@@ -27,20 +27,20 @@
     <string name="retry">retry</string>
     <string name="noInternetConnection">No Internet Connection</string>
     <string name="dataIsUpdated">Data is Updated</string>
-    <string name="YouAddSame">You Add Same Data</string>
+    <string name="YouAddSame">There Is No Difference In Data</string>
     <string name="enterVName">Enter Valid Name</string>
     <string name="enterVNumber">Enter Valid Number</string>
     <string name="enterYName">Enter Your Name</string>
     <string name="enterYPhone">Enter Your Phone</string>
     <string name="enterYpassord">Enter Your Password</string>
     <string name="emailIsRequier">Email is Required</string>
-    <string name="passordShort">\"Password is too Short \"</string>
+    <string name="passordShort">Password is too Short</string>
     <string name="enterVemail">Please Enter Valid Email</string>
-    <string name="registerSuccess">Your Register is Successful</string>
+    <string name="registerSuccess">Registered Successfully</string>
     <string name="error">Error !</string>
     <string name="emailAlready">Email Already Exist</string>
-    <string name="loginSuccess">Your Login is Successful</string>
+    <string name="loginSuccess">Logged In Successfully</string>
     <string name="alreadyLogin">Already Logged In</string>
-    <string name="authenticationPass">Authentication pass.</string>
-    <string name="authenticathinFaild">Authentication failed.</string>
+    <string name="authenticationPass">Authentication Passed.</string>
+    <string name="authenticathinFaild">Authentication Failed.</string>
 </resources>

@@ -135,8 +135,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public Uri parseResult(int resultCode, @Nullable Intent intent) {
                 try {
-                    Uri uri = CropImage.getActivityResult(intent).getUri();
-                    return uri;
+                    return CropImage.getActivityResult(intent).getUri();
                 } catch (Exception e) {
                     return null;
                 }
@@ -146,10 +145,9 @@ public class ProfileFragment extends Fragment {
 
     private void retrieveData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getUid());
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 UserModel userModel = snapshot.getValue(UserModel.class);
                 name.setText(userModel.getUserName());
                 password.setText(userModel.getUserPassword());
@@ -164,13 +162,8 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if (name.getText().toString().equals(userModel.getUserName()) && password.getText().toString().equals(userModel.getUserPassword())
-                                && phone.getText().toString().equals(userModel.getUserPhone())) {
-                            update.setEnabled(false);
-                        } else {
-                            update.setEnabled(true);
-                        }
+                        update.setEnabled(!name.getText().toString().equals(userModel.getUserName()) || !password.getText().toString().equals(userModel.getUserPassword())
+                                || !phone.getText().toString().equals(userModel.getUserPhone()));
                     }
 
 
@@ -254,38 +247,9 @@ public class ProfileFragment extends Fragment {
                 }
                 reference = FirebaseDatabase.getInstance().
                         getReference("Users").child(auth.getCurrentUser().getUid());
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.child("userName").getValue(String.class).equals(name.getText().toString()) ||
-                                !snapshot.child("userPhone").getValue(String.class).equals(phone.getText().toString())
-                                || !snapshot.child("userPassword").getValue(String.class).equals(password.getText().toString())) {
-                            update.setEnabled(false);
-                            reference.child("userName").setValue(name.getText().toString());
-                            reference.child("userPhone").setValue(phone.getText().toString());
-                            reference.child("userPassword").setValue(password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(getActivity(), R.string.dataIsUpdated, Toast.LENGTH_SHORT).show();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            retrieveData();
-
-                                        }
-                                    },1000);
-                                }
-                            });
-
-                        } else {
-                            Toast.makeText(getActivity(), R.string.YouAddSame, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
+                reference.child("userName").setValue(name.getText().toString());
+                reference.child("userPhone").setValue(phone.getText().toString());
+                reference.child("userPassword").setValue(password.getText().toString());
             }
         });
 
