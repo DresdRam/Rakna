@@ -1,6 +1,5 @@
 package com.example.rakna.Fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.rakna.HomeActivity;
@@ -28,16 +28,21 @@ import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
 import com.example.rakna.pojo.MainViewModel;
+import com.example.rakna.pojo.Repository;
 import com.example.rakna.pojo.UserModel;
 import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.util.Locale;
 
 public class SettingsFragment extends Fragment {
 
@@ -49,7 +54,6 @@ public class SettingsFragment extends Fragment {
     private boolean selected;
     private MainViewModel viewModel;
     View view;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +61,7 @@ public class SettingsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         initComponent();
         setPreviousSelectedLang();
+        setUserInfo();
         logoutAction();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -87,6 +92,47 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    private void setUserInfo() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserModel userModel = snapshot.getValue(UserModel.class);
+                assert userModel != null;
+                username.setText(userModel.getUserName());
+                userImage.setVisibility(View.INVISIBLE);
+                spinKitView.setVisibility(View.VISIBLE);
+                if (userModel.getUri() != null) {
+                    Picasso.get()
+                            .load(userModel.getUri())
+                            .into(userImage, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    userImage.setVisibility(View.VISIBLE);
+                                    spinKitView.setVisibility(View.INVISIBLE);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                                    userImage.setVisibility(View.VISIBLE);
+                                    spinKitView.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                } else {
+                    userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
+                    userImage.setVisibility(View.VISIBLE);
+                    spinKitView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void initComponent() {
         logout = view.findViewById(R.id.button_logout);
         spinKitView = view.findViewById(R.id.spinKit_settings);
@@ -94,46 +140,6 @@ public class SettingsFragment extends Fragment {
         selected = false;
         userImage = view.findViewById(R.id.imageView_settings_userImage);
         username = view.findViewById(R.id.textView_settings_userName);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (!isConnected()) {
-            Toast.makeText(context, "Oops, Check Your Connection Please!", Toast.LENGTH_SHORT).show();
-        }
-        retrieveData();
-    }
-
-    private void retrieveData() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.init();
-        viewModel.getProfile().observe(this, new Observer<UserModel>() {
-            @Override
-            public void onChanged(UserModel userModel) {
-                if (userModel.getUri() != null) {
-                    Picasso.get()
-                            .load(userModel.getUri())
-                            .into(userImage, new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    spinKitView.setVisibility(View.GONE);
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
-                                    spinKitView.setVisibility(View.GONE);
-                                }
-                            });
-                } else {
-                    userImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.profile_image));
-                    spinKitView.setVisibility(View.GONE);
-                }
-                username.setText(userModel.getUserName());
-            }
-        });
-
     }
 
     private void logoutAction() {

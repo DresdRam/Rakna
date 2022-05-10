@@ -35,7 +35,7 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/profile_image"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:id="@+id/retrieved_email"
@@ -45,7 +45,7 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/retrieved_name"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
     </RelativeLayout>
 
@@ -75,6 +75,7 @@
                 android:id="@+id/edit_name"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
+                android:inputType="textPersonName"
                 android:hint="@string/name" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,6 +120,7 @@
                 android:id="@+id/edit_phone"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
+                android:inputType="phone"
                 android:hint="@string/phone" />
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -5,15 +5,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +38,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     ImageView currentAnimatedCar;
     TextView currentAnimatedTV;
     CircularProgressIndicator loadingAnimation;
+    RelativeLayout relativeLayout;
     private ArrayList<Car> parkedCars;
     private ArrayList<Boolean> booleanParkedCars;
     private ArrayList<Boolean> tempBooleanParkedCars;
@@ -40,7 +46,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private int[] carsDrawablesArray;
     private ParkingPlace parkingPlace;
     private DatabaseReference databaseReference;
-    private boolean firstTimeData;
+    private boolean firstTimeData, checkedConnection;
     private final int LEAVING_CAR = -1;
     private final int PARKING_CAR = 1;
     private Random random;
@@ -50,30 +56,37 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocaleHelper.setAppLanguage(ParkingPlaceActivity.this);
         setContentView(R.layout.activity_parking_place);
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        firstTimeData = false;
-        loadingAnimation = findViewById(R.id.circular_progress_indicator);
-        random = new Random();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
+        initComponents();
+        initBackBtnListener();
+        initConnectionThread();
+        startLoadingAnimation();
+        setupFireBase();
+    }
 
-        addressTextView = findViewById(R.id.textView_address);
-        freeTextView = findViewById(R.id.textView_free);
-        backButton = findViewById(R.id.button_back_arrow);
-
-        carsDrawablesArray = new int[]{R.drawable.ic_car_one, R.drawable.ic_car_two, R.drawable.ic_car_three, R.drawable.ic_car_four, R.drawable.ic_car_five};
-
-        addressTextView.setSelected(true);
-
+    private void initBackBtnListener() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+    }
 
-        startLoadingAnimation();
-        setupFireBase();
+    private void initComponents() {
+        addressTextView = findViewById(R.id.textView_address);
+        freeTextView = findViewById(R.id.textView_free);
+        backButton = findViewById(R.id.button_back_arrow);
+        loadingAnimation = findViewById(R.id.circular_progress_indicator);
+        relativeLayout = findViewById(R.id.parking_place_layout);
+        firstTimeData = false;
+        checkedConnection = false;
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+        random = new Random();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
+        carsDrawablesArray = new int[]{R.drawable.ic_car_one, R.drawable.ic_car_two, R.drawable.ic_car_three, R.drawable.ic_car_four, R.drawable.ic_car_five};
+        addressTextView.setSelected(true);
+
     }
 
     private void setupFireBase() {
@@ -191,6 +204,54 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         carsRecyclerview.setAdapter(mAdapter);
         carsRecyclerview.setLayoutManager(new GridLayoutManager(this, columns));
         stopLoadingAnimation();
+    }
+
+
+    private void initConnectionThread() {
+        Thread thread = new Thread() {
+            public void run() {
+                while(true){
+                    if(!checkedConnection){
+                        if (!isOnline()) {
+                            checkedConnection = true;
+                            Snackbar snackbar = Snackbar.make(relativeLayout, "", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                                @Override
+                                public void onShown(Snackbar transientBottomBar) {
+                                    super.onShown(transientBottomBar);
+                                    transientBottomBar.getView().findViewById(R.id.snackbar_action).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if (isOnline()) {
+                                                snackbar.dismiss();
+                                                checkedConnection = false;
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            snackbar.setText(getResources().getString(R.string.noInternetConnection))
+                                    .setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                        }
+                                    })
+                                    .setTextColor(getResources().getColor(R.color.white))
+                                    .setActionTextColor(getResources().getColor(R.color.white))
+                                    .setBackgroundTint(getResources().getColor(R.color.red));
+                            snackbar.show();
+                        }
+                    }
+                }
+            }
+        };
+
+        thread.start();
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
     private void startLoadingAnimation() {

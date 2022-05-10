@@ -11,7 +11,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -19,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +49,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.protobuf.Any;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -62,7 +71,11 @@ public class ProfileFragment extends Fragment {
     StorageReference storageReference;
     DatabaseReference reference;
     FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ActivityResultLauncher<Any> activityResultLauncher;
+    private ActivityResultLauncher<String[]> mPermissionResult;
     private MainViewModel mainViewModel;
+
+    private ActivityResultContract<Any, Uri> cropActivityResultContract;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -81,7 +94,31 @@ public class ProfileFragment extends Fragment {
         retrieveData();
         profileImageAction();
         updateButtonAction();
+        initActivityResultLauncher();
+        initActivityResultPermission();
         return view;
+    }
+
+    private void initActivityResultPermission() {
+        mPermissionResult = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+                    @Override
+                    public void onActivityResult(Map<String, Boolean> result) {
+                    }
+                });
+    }
+
+    private void initActivityResultLauncher() {
+        activityResultLauncher = registerForActivityResult(cropActivityResultContract, new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                if (result != null) {
+                    imageUri = result;
+                    Picasso.get().load(imageUri).into(profileImage);
+                    addToStorage(imageUri);
+                }
+            }
+        });
     }
 
     private void initComponent() {
@@ -93,6 +130,23 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.retrieved_name);
         update = view.findViewById(R.id.update_button);
         userEmail = view.findViewById(R.id.retrieved_email);
+        cropActivityResultContract = new ActivityResultContract<Any, Uri>() {
+            @NonNull
+            @Override
+            public Intent createIntent(@NonNull Context context, Any input) {
+                return CropImage.activity().setAspectRatio(20, 20).getIntent(getActivity());
+            }
+
+            @Override
+            public Uri parseResult(int resultCode, @Nullable Intent intent) {
+                try {
+                    Uri uri = CropImage.getActivityResult(intent).getUri();
+                    return uri;
+                }catch (Exception e){
+                    return null;
+                }
+            }
+        };
     }
 
     private void retrieveData() {
@@ -114,13 +168,8 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if (name.getText().toString().equals(userModel.getUserName()) && password.getText().toString().equals(userModel.getUserPassword())
-                                && phone.getText().toString().equals(userModel.getUserPhone())) {
-                            update.setEnabled(false);
-                        } else {
-                            update.setEnabled(true);
-                        }
+                        update.setEnabled(!name.getText().toString().equals(userModel.getUserName()) || !password.getText().toString().equals(userModel.getUserPassword())
+                                || !phone.getText().toString().equals(userModel.getUserPhone()));
                     }
 
 
@@ -158,16 +207,10 @@ public class ProfileFragment extends Fragment {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean pick = true;
-                if (pick) {
-                    if (!checkCameraPermission()) {
-                        requestCameraPermission();
-                    } else pickImage();
-                } else {
-                    if (!checkStoragePermission()) {
-                        requestStoragePermission();
-                    } else pickImage();
-                }
+                if (!checkStoragePermission() && !checkCameraPermission()) {
+                    requestStoragePermission();
+                    requestCameraPermission();
+                } else pickImage();
             }
         });
     }
@@ -240,11 +283,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void requestStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+        mPermissionResult.launch(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
     }
 
     private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+        mPermissionResult.launch(new String[]{Manifest.permission.CAMERA});
     }
 
     private boolean checkCameraPermission() {
@@ -258,25 +301,26 @@ public class ProfileFragment extends Fragment {
     }
 
     private void pickImage() {
-        CropImage.activity()
-                .start(getContext(), this);
+        activityResultLauncher.launch(null);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == Activity.RESULT_OK) {
-                imageUri = result.getUri();
-                Picasso.get().load(imageUri).into(profileImage);
-                addToStorage(imageUri);
+    /*
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == Activity.RESULT_OK) {
+                    imageUri = result.getUri();
+                    Picasso.get().load(imageUri).into(profileImage);
+                    addToStorage(imageUri);
 
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                    Log.e("ImageActivityResults", error.toString());
+                }
             }
         }
-    }
-
+    */
     private String getExtension(Uri uri) {
         ContentResolver resolver = getActivity().getContentResolver();
         MimeTypeMap map = MimeTypeMap.getSingleton();

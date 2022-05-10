@@ -83,9 +83,11 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private GoogleMap mMap;
     private Geocoder geocoder;
     private ActivityResultLauncher<String[]> mPermissionResult;
+    private AlertDialog permissionDialog;
     private Marker currentClickedMarker;
     private List<Polyline> polyLines = null;
     private MapBottomSheetFragment bottomSheetFragment;
+    private boolean dialogIsShown;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
     Marker userLocationMarker;
@@ -96,8 +98,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        dialogIsShown = false;
         permissionsArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-
         mPermissionResult = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
                     @Override
@@ -276,6 +278,16 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         route();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if(dialogIsShown){
+                permissionDialog.dismiss();
+            }
+        }
+    }
+
     private void route() {
         LatLng start = new LatLng(userLocationMarker.getPosition().latitude, userLocationMarker.getPosition().longitude);
         LatLng end = new LatLng(currentClickedMarker.getPosition().latitude, currentClickedMarker.getPosition().longitude);
@@ -380,8 +392,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     }
 
     private void showAlertDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(getActivity().getResources().getString(R.string.permissionsNeeded))
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getActivity().getResources().getString(R.string.permissionsNeeded))
                 .setMessage(getActivity().getResources().getString(R.string.thisAppNeedsLocationPermission))
                 .setPositiveButton(getActivity().getResources().getString(R.string.accept), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
@@ -396,8 +408,10 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                     public void onClick(DialogInterface dialogInterface, int i) {
                         getActivity().finish();
                     }
-                })
-                .show();
+                });
+        permissionDialog = dialogBuilder.create();
+        permissionDialog.show();
+        dialogIsShown = true;
     }
 
     @Override

@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initComponents();
-        connectionThreadInit();
+        initConnectionThread();
     }
 
-    private void connectionThreadInit() {
+    private void initConnectionThread() {
         Thread thread = new Thread() {
             public void run(){
                 try {

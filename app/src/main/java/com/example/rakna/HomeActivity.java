@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
@@ -36,7 +35,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
         setContentView(R.layout.activity_home);
 
         initComponent();
-        connectionThreadInit();
+        initConnectionThread();
         addFragmentsToManager();
         navigationViewAction();
     }
@@ -61,8 +60,8 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
 
     //First Fragment when Home Activity open
     private void addFragmentsToManager() {
-        getSupportFragmentManager().beginTransaction().add(R.id.body_container, profileFragment, "ProfileFragment").commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.body_container, settingsFragment, "SettingsFragment").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.body_container, homeFragment, "HomeFragment").commit();
     }
 
@@ -98,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
         });
     }
 
-    private void connectionThreadInit() {
+    private void initConnectionThread() {
         Thread thread = new Thread() {
             public void run() {
                 while(true){
