@@ -46,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     //authentication with Email & password
     private void createUser() {
-
         if (get_name.isEmpty()) {
             name.setError(getString(R.string.enterYName));
             spinKitView.setVisibility(View.INVISIBLE);
@@ -62,11 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
-        if (get_password.length() <= 6) {
-            password.setError(getString(R.string.passordShort));
-            spinKitView.setVisibility(View.INVISIBLE);
-            return;
-        }
         if (get_phone.isEmpty()) {
             phone.setError(getString(R.string.enterYPhone));
             return;
@@ -76,13 +70,18 @@ public class RegisterActivity extends AppCompatActivity {
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
-        if (!phoneIsValid(get_phone)) {
-            phone.setError(getString(R.string.enterVNumber));
+        if (!emailIsValid(get_email)) {
+            email.setError(getString(R.string.enterVemail));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
-        if (!emailIsValid(get_email)) {
-            email.setError(getString(R.string.enterVemail));
+        if (!passwordIsValid(get_password)) {
+            password.setError(getString(R.string.passordShort));
+            spinKitView.setVisibility(View.INVISIBLE);
+            return;
+        }
+        if (!phoneIsValid(get_phone)) {
+            phone.setError(getString(R.string.enterVNumber));
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
@@ -136,6 +135,11 @@ public class RegisterActivity extends AppCompatActivity {
         return Pattern.compile("^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$").matcher(s).matches();
     }
 
+    //regex for password
+    private boolean passwordIsValid(String s) {
+        return Pattern.compile("^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$").matcher(s).matches();
+    }
+
     //regex for phone
     private boolean phoneIsValid(String s) {
         return Pattern.compile("^01[0125][0-9]{8}").matcher(s).matches();
@@ -143,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //regex for email
     private boolean emailIsValid(String s) {
-        return Pattern.compile("^(.+)@(.+)$").matcher(s).matches();
+        return Pattern.compile("^[a-z0-9!#$%&'*+\\=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$").matcher(s).matches();
     }
 
     //intent to Login Activity
