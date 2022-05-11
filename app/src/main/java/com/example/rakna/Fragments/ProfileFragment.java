@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rakna.LoadingDialog;
 import com.example.rakna.R;
 import com.example.rakna.Pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,6 +68,7 @@ public class ProfileFragment extends Fragment {
     StorageReference storageReference;
     DatabaseReference reference;
     FirebaseAuth auth = FirebaseAuth.getInstance();
+    LoadingDialog loadingDialog;
     private ActivityResultLauncher<Any> activityResultLauncher;
     private ActivityResultLauncher<String[]> mPermissionResult;
 
@@ -108,6 +112,7 @@ public class ProfileFragment extends Fragment {
             public void onActivityResult(Uri result) {
                 if (result != null) {
                     imageUri = result;
+                    loadingDialog.show(getResources().getString(R.string.uploadingImage));
                     Picasso.get().load(imageUri).into(profileImage);
                     addToStorage(imageUri);
                 }
@@ -124,6 +129,7 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.retrieved_name);
         update = view.findViewById(R.id.update_button);
         userEmail = view.findViewById(R.id.retrieved_email);
+        loadingDialog = new LoadingDialog(getActivity());
         cropActivityResultContract = new ActivityResultContract<Any, Uri>() {
             @NonNull
             @Override
@@ -309,8 +315,21 @@ public class ProfileFragment extends Fragment {
                         reference = FirebaseDatabase.getInstance()
                                 .getReference("Users").child(auth.getCurrentUser().getUid()).child("uri");
                         reference.setValue(uri.toString());
+                        loadingDialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("Image", "uploading failed");
+                        loadingDialog.dismiss();
                     }
                 });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Image", "uploading failed");
+                loadingDialog.dismiss();
             }
         });
     }

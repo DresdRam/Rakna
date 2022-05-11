@@ -45,4 +45,5 @@
     <string name="authenticathinFaild">فشل في التوثيق</string>
     <string name="signingUp">جاري التسجيل</string>
     <string name="signingIn">جاري تسجيل الدخول</string>
+    <string name="uploadingImage">جاري رفع الصورة</string>
 </resources>

@@ -45,4 +45,5 @@
     <string name="authenticathinFaild">Authentication Failed.</string>
     <string name="signingUp">Signing Up</string>
     <string name="signingIn">Signing In</string>
+    <string name="uploadingImage">Uploading Image</string>
 </resources>
