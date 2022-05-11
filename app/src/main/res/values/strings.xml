@@ -43,4 +43,6 @@
     <string name="alreadyLogin">Already Logged In</string>
     <string name="authenticationPass">Authentication Passed.</string>
     <string name="authenticathinFaild">Authentication Failed.</string>
+    <string name="signingUp">Signing Up</string>
+    <string name="signingIn">Signing In</string>
 </resources>

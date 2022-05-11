@@ -1,11 +1,8 @@
 package com.example.rakna;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -13,9 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.audiofx.EnvironmentalReverb;
-import android.media.audiofx.Equalizer;
-import android.media.audiofx.Virtualizer;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -29,27 +24,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rakna.pojo.UserModel;
+import com.example.rakna.Pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     SpinKitView spinKitView;
     ActivityResultLauncher<Intent> activityResultLauncher;
+    LoadingDialog loadingDialog;
     private GoogleSignInClient mGoogleSignInClient;
     private final String TAG = "FIREBASE";
 
@@ -80,8 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         registerTxtAction();
         signWithGoogleAction();
         logInAction();
-
-
     }
 
     //check user is already logged in
@@ -187,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.log_password);
         logIn = findViewById(R.id.log_Btn);
         spinKitView = findViewById(R.id.spin_kit);
+        loadingDialog = new LoadingDialog(this);
     }
 
     //this method to get text from EditText
@@ -208,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
             spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
+        loadingDialog.show(getResources().getString(R.string.signingIn));
         auth.signInWithEmailAndPassword(get_email, get_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -220,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, getString(R.string.error) + task.getException(), Toast.LENGTH_SHORT).show();
                     spinKitView.setVisibility(View.INVISIBLE);
                 }
+                loadingDialog.dismiss();
             }
         });
 
@@ -228,6 +219,7 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         auth = FirebaseAuth.getInstance();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        loadingDialog.show(getResources().getString(R.string.signingIn));
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -240,6 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
                         }
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -295,5 +288,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleHelper.setAppLanguage(this);
     }
 }

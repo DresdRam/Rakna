@@ -23,7 +23,7 @@ import com.example.rakna.HomeActivity;
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
-import com.example.rakna.pojo.UserModel;
+import com.example.rakna.Pojo.UserModel;
 import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;

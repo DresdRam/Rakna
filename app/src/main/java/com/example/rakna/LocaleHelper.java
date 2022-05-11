@@ -40,7 +40,7 @@ public class LocaleHelper {
 
     public static void setAppLanguage(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String appLang = sharedPreferences.getString(LocaleHelper.SELECTED_LANGUAGE, Locale.getDefault().getLanguage());
+        String appLang = sharedPreferences.getString(LocaleHelper.SELECTED_LANGUAGE, getSavedLanguage(context));
 
         Locale myLocale = new Locale(appLang);
         Resources res = context.getResources();

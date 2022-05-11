@@ -1,9 +1,11 @@
 package com.example.rakna;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
@@ -95,5 +97,11 @@ public class MainActivity extends AppCompatActivity {
         splashActive = true;
         paused = false;
         relativeLayout = findViewById(R.id.main_relative_layout);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleHelper.setAppLanguage(this);
     }
 }

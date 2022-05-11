@@ -43,4 +43,6 @@
     <string name="alreadyLogin">مسجل دخولك بالفعل</string>
     <string name="authenticationPass">تم تخطي التوثيق</string>
     <string name="authenticathinFaild">فشل في التوثيق</string>
+    <string name="signingUp">جاري التسجيل</string>
+    <string name="signingIn">جاري تسجيل الدخول</string>
 </resources>

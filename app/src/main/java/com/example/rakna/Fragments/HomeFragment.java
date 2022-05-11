@@ -30,7 +30,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -54,7 +53,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -77,7 +75,7 @@ import java.util.Objects;
 public class HomeFragment extends Fragment implements RoutingListener, OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
 
     private static final String TAG = "MapsFragment";
-    private final String GOOGLE_API_KEY = "AIzaSyBaXYS8Cxu01QopPemlAXqKh_Rl4ZLQiUw";
+    private final String GOOGLE_API_KEY = "AIzaSyAG9B9kFnwVFhS19WeWv27t-PNrixyYssg";
     private final String PARKING_PLACE = "Parking Place";
     private Routing routing;
     private GoogleMap mMap;
@@ -88,6 +86,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private List<Polyline> polyLines = null;
     private MapBottomSheetFragment bottomSheetFragment;
     private boolean dialogIsShown;
+    View view;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
     Marker userLocationMarker;
@@ -97,9 +96,30 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        initComponents();
+        initActivityResultLauncher();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
+        mapFragment.getMapAsync(this);
+        return view;
+    }
+
+    private void initComponents() {
         dialogIsShown = false;
         permissionsArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        geocoder = new Geocoder(getActivity());
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void initActivityResultLauncher() {
         mPermissionResult = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
                     @Override
@@ -124,18 +144,6 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                         }
                     }
                 });
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
-        mapFragment.getMapAsync(this);
-        geocoder = new Geocoder(getActivity());
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        return view;
     }
 
     @Override

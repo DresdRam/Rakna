@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rakna.pojo.UserModel;
-import com.github.ybq.android.spinkit.SpinKitView;
+import com.example.rakna.Pojo.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     String get_name, get_phone, get_email, get_password;
     UserModel model;
     FirebaseUser user;
-    SpinKitView spinKitView;
+    LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +48,14 @@ public class RegisterActivity extends AppCompatActivity {
     private void createUser() {
         if (get_name.isEmpty()) {
             name.setError(getString(R.string.enterYName));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_email.isEmpty()) {
             email.setError(getString(R.string.emailIsRequier));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_password.isEmpty()) {
             password.setError(getString(R.string.enterYpassord));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (get_phone.isEmpty()) {
@@ -67,24 +64,21 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (!nameIsValid(get_name)) {
             name.setError(getString(R.string.enterVName));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (!emailIsValid(get_email)) {
             email.setError(getString(R.string.enterVemail));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (!passwordIsValid(get_password)) {
             password.setError(getString(R.string.passordShort));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
         if (!phoneIsValid(get_phone)) {
             phone.setError(getString(R.string.enterVNumber));
-            spinKitView.setVisibility(View.INVISIBLE);
             return;
         }
+        loadingDialog.show(getResources().getString(R.string.signingUp));
         auth.createUserWithEmailAndPassword(get_email, get_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -92,12 +86,11 @@ public class RegisterActivity extends AppCompatActivity {
                     storeData();
                     Toast.makeText(RegisterActivity.this, R.string.registerSuccess, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                    spinKitView.setVisibility(View.INVISIBLE);
                     finish();
                 } else {
                     Toast.makeText(RegisterActivity.this, getString(R.string.error) + task.getException(), Toast.LENGTH_SHORT).show();
-                    spinKitView.setVisibility(View.INVISIBLE);
                 }
+                loadingDialog.dismiss();
             }
         });
     }
@@ -119,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.reg_password);
         phone = findViewById(R.id.reg_phone);
         signUp = findViewById(R.id.signUp_btn);
-        spinKitView = findViewById(R.id.spin_kit2);
+        loadingDialog = new LoadingDialog(this);
     }
 
     //this method to get text from EditText
@@ -166,11 +159,15 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                spinKitView.setVisibility(View.VISIBLE);
                 get();
                 createUser();
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleHelper.setAppLanguage(this);
     }
 }

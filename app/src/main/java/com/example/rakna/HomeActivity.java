@@ -2,8 +2,10 @@ package com.example.rakna;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,18 +24,18 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
 
     BottomNavigationView navigationView;
     FrameLayout frameLayout;
-    private HomeFragment homeFragment;
-    private ProfileFragment profileFragment;
-    private SettingsFragment settingsFragment;
     private int lastItemId;
     private boolean checkedConnection;
+    final HomeFragment homeFragment = new HomeFragment();
+    final ProfileFragment profileFragment = new ProfileFragment();
+    final SettingsFragment settingsFragment = new SettingsFragment();
+    final FragmentManager supportFragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocaleHelper.setAppLanguage(HomeActivity.this);
+        LocaleHelper.setAppLanguage(this);
         setContentView(R.layout.activity_home);
-
         initComponent();
         initConnectionThread();
         addFragmentsToManager();
@@ -43,15 +45,6 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     // declare the main component
     private void initComponent() {
         navigationView = findViewById(R.id.bottom_navigation);
-        if (homeFragment == null) {
-            homeFragment = new HomeFragment();
-        }
-        if (profileFragment == null) {
-            profileFragment = new ProfileFragment();
-        }
-        if (settingsFragment == null) {
-            settingsFragment = new SettingsFragment();
-        }
         navigationView.setSelectedItemId(R.id.nav_home);
         lastItemId = R.id.nav_home;
         checkedConnection = false;
@@ -60,9 +53,9 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
 
     //First Fragment when Home Activity open
     private void addFragmentsToManager() {
-        getSupportFragmentManager().beginTransaction().add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.body_container, homeFragment, "HomeFragment").commit();
+        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
+        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
+        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, homeFragment, "HomeFragment").commit();
     }
 
     //this method to handle transaction between Fragments
@@ -72,23 +65,23 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_home) {
                     if (lastItemId != item.getItemId()) {
-                        getSupportFragmentManager().beginTransaction().show(homeFragment).commit();
-                        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-                        getSupportFragmentManager().beginTransaction().hide(settingsFragment).commit();
+                        supportFragmentManager.beginTransaction().show(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
                         lastItemId = item.getItemId();
                     }
                 } else if (item.getItemId() == R.id.nav_profile) {
                     if (lastItemId != item.getItemId()) {
-                        getSupportFragmentManager().beginTransaction().hide(homeFragment).commit();
-                        getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
-                        getSupportFragmentManager().beginTransaction().hide(settingsFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().show(profileFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
                         lastItemId = item.getItemId();
                     }
                 } else if (item.getItemId() == R.id.nav_setting) {
                     if (lastItemId != item.getItemId()) {
-                        getSupportFragmentManager().beginTransaction().hide(homeFragment).commit();
-                        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-                        getSupportFragmentManager().beginTransaction().show(settingsFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+                        supportFragmentManager.beginTransaction().show(settingsFragment).commit();
                         lastItemId = item.getItemId();
                     }
                 }
@@ -142,6 +135,12 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     private boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleHelper.setAppLanguage(this);
     }
 
     @Override
