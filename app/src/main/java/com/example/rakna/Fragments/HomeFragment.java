@@ -86,12 +86,29 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private List<Polyline> polyLines = null;
     private MapBottomSheetFragment bottomSheetFragment;
     private boolean dialogIsShown;
+    private boolean firstLaunch;
     View view;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
     Marker userLocationMarker;
     Circle userLocationAccuracyCircle;
     String[] permissionsArray;
+
+
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            Log.d(TAG, "onLocationResult: " + locationResult.getLastLocation());
+            if (mMap != null) {
+                setUserLocationMarker(locationResult.getLastLocation());
+                if (firstLaunch){
+                    zoomToUserLocation();
+                    firstLaunch = false;
+                }
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,6 +125,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
     private void initComponents() {
         dialogIsShown = false;
+        firstLaunch = true;
         permissionsArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         geocoder = new Geocoder(getActivity());
 
@@ -157,20 +175,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         loadPlaces();
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             enableUserLocation();
-            zoomToUserLocation();
         }
     }
-
-    LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            Log.d(TAG, "onLocationResult: " + locationResult.getLastLocation());
-            if (mMap != null) {
-                setUserLocationMarker(locationResult.getLastLocation());
-            }
-        }
-    };
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
@@ -255,7 +261,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                 @Override
                 public void onSuccess(Location location) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16), 600, null);
                 }
             });
         }

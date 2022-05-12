@@ -34,8 +34,10 @@ import com.example.rakna.LoadingDialog;
 import com.example.rakna.R;
 import com.example.rakna.Pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +90,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         initComponent();
-        update.setEnabled(false);
         retrieveData();
         profileImageAction();
         updateButtonAction();
@@ -130,6 +131,7 @@ public class ProfileFragment extends Fragment {
         update = view.findViewById(R.id.update_button);
         userEmail = view.findViewById(R.id.retrieved_email);
         loadingDialog = new LoadingDialog(getActivity());
+        update.setEnabled(false);
         cropActivityResultContract = new ActivityResultContract<Any, Uri>() {
             @NonNull
             @Override
@@ -305,31 +307,21 @@ public class ProfileFragment extends Fragment {
 
     private void addToStorage(Uri uri) {
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
-        final StorageReference imageName = storageReference.child(System.currentTimeMillis() + "." + getExtension(uri));
-        imageName.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        final StorageReference imageName = storageReference.child(FirebaseAuth.getInstance().getUid());
+        imageName.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                imageName.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onSuccess(Uri uri) {
+                    public void onComplete(@NonNull Task<Uri> task) {
                         reference = FirebaseDatabase.getInstance()
                                 .getReference("Users").child(auth.getCurrentUser().getUid()).child("uri");
                         reference.setValue(uri.toString());
-                        loadingDialog.dismiss();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("Image", "uploading failed");
+                        Log.i("Image", "Inserting Into Firebase Completed");
                         loadingDialog.dismiss();
                     }
                 });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("Image", "uploading failed");
-                loadingDialog.dismiss();
+                Log.i("Image", "Uploading Completed");
             }
         });
     }
