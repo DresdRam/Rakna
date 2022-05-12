@@ -85,7 +85,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         checkedConnection = false;
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         random = new Random();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking").child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
         carsDrawablesArray = new int[]{R.drawable.ic_car_one, R.drawable.ic_car_two, R.drawable.ic_car_three, R.drawable.ic_car_four, R.drawable.ic_car_five};
         addressTextView.setSelected(true);
 

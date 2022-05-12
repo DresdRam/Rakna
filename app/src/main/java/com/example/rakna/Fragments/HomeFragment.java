@@ -331,7 +331,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     }
 
     private void loadPlaces() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Parking Locations");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Parking").child("Parking Locations");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
