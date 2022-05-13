@@ -33,6 +33,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
@@ -212,11 +213,10 @@ public class LoginActivity extends AppCompatActivity {
                                     if (!snapshot.exists()) {
                                         updateFirebaseData(user);
                                         goToHome();
-                                        loadingDialog.dismiss();
                                     } else {
                                         Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
                                     }
-
+                                    loadingDialog.dismiss();
                                 }
 
                                 @Override
@@ -230,7 +230,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+            }
+        });
     }
 
     private void goToHome() {

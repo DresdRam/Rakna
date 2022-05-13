@@ -47,4 +47,5 @@
     <string name="signingIn">جاري تسجيل الدخول</string>
     <string name="uploadingImage">جاري رفع الصورة</string>
     <string name="enterVpass">من فضلك ادخل رمز سري لائق</string>
+    <string name="failed">فشل</string>
 </resources>

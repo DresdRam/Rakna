@@ -47,4 +47,5 @@
     <string name="signingIn">Signing In</string>
     <string name="uploadingImage">Uploading Image</string>
     <string name="enterVpass">Enter Valid Password</string>
+    <string name="failed">Failed</string>
 </resources>

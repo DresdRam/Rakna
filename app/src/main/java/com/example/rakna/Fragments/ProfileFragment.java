@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rakna.LoadingDialog;
+import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
 import com.example.rakna.Pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -321,8 +322,20 @@ public class ProfileFragment extends Fragment {
                         Log.i("Image", "Inserting Into Firebase Completed");
                         loadingDialog.dismiss();
                     }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), R.string.failed, Toast.LENGTH_SHORT).show();
+                        loadingDialog.dismiss();
+                    }
                 });
                 Log.i("Image", "Uploading Completed");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), R.string.failed, Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
             }
         });
     }
