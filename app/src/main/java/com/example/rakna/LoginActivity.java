@@ -231,13 +231,14 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
                                     LoginActivity.this.finish();
+                                    loadingDialog.dismiss();
                                 }
                             }, 2000);
 
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
                         }
-                        loadingDialog.dismiss();
+
                     }
                 });
     }
