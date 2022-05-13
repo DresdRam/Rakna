@@ -16,6 +16,7 @@ import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
 import com.example.rakna.Fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -24,6 +25,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
 
     BottomNavigationView navigationView;
     FrameLayout frameLayout;
+    FloatingActionButton nearbyBtn;
     private int lastItemId;
     private boolean checkedConnection;
     final HomeFragment homeFragment = new HomeFragment();
@@ -40,15 +42,26 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
         initConnectionThread();
         addFragmentsToManager();
         navigationViewAction();
+        setNearbyBtnListener();
+    }
+
+    private void setNearbyBtnListener() {
+        nearbyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                homeFragment.zoomToNearestMarker();
+            }
+        });
     }
 
     // declare the main component
     private void initComponent() {
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelectedItemId(R.id.nav_home);
+        frameLayout = findViewById(R.id.body_container);
+        nearbyBtn = findViewById(R.id.floatingActionButton_nearby);
         lastItemId = R.id.nav_home;
         checkedConnection = false;
-        frameLayout = findViewById(R.id.body_container);
     }
 
     //First Fragment when Home Activity open
@@ -68,6 +81,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
                         supportFragmentManager.beginTransaction().show(homeFragment).commit();
                         supportFragmentManager.beginTransaction().hide(profileFragment).commit();
                         supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+                        nearbyBtn.setVisibility(View.VISIBLE);
                         lastItemId = item.getItemId();
                     }
                 } else if (item.getItemId() == R.id.nav_profile) {
@@ -75,6 +89,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
                         supportFragmentManager.beginTransaction().hide(homeFragment).commit();
                         supportFragmentManager.beginTransaction().show(profileFragment).commit();
                         supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+                        nearbyBtn.setVisibility(View.GONE);
                         lastItemId = item.getItemId();
                     }
                 } else if (item.getItemId() == R.id.nav_setting) {
@@ -82,6 +97,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
                         supportFragmentManager.beginTransaction().hide(homeFragment).commit();
                         supportFragmentManager.beginTransaction().hide(profileFragment).commit();
                         supportFragmentManager.beginTransaction().show(settingsFragment).commit();
+                        nearbyBtn.setVisibility(View.GONE);
                         lastItemId = item.getItemId();
                     }
                 }

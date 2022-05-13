@@ -47,6 +47,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
+
     TextView registerTxt;
     ImageView signWithGoogle;
     TextInputEditText email, password;
@@ -58,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
     LoadingDialog loadingDialog;
     private GoogleSignInClient mGoogleSignInClient;
     private final String TAG = "FIREBASE";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,7 +233,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void goToHome(){
+    private void goToHome() {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(intent);
         Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();

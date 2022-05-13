@@ -84,9 +84,11 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private AlertDialog permissionDialog;
     private Marker currentClickedMarker;
     private List<Polyline> polyLines = null;
+    private ArrayList<LatLng> placesCoordinates;
     private MapBottomSheetFragment bottomSheetFragment;
     private boolean dialogIsShown;
     private boolean firstLaunch;
+    private Location userLastKnownLocation;
     View view;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
@@ -101,6 +103,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
             super.onLocationResult(locationResult);
             Log.d(TAG, "onLocationResult: " + locationResult.getLastLocation());
             if (mMap != null) {
+                userLastKnownLocation = locationResult.getLastLocation();
                 setUserLocationMarker(locationResult.getLastLocation());
                 if (firstLaunch){
                     zoomToUserLocation();
@@ -117,15 +120,56 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
         initComponents();
         initActivityResultLauncher();
-
+        
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
         return view;
     }
 
+    public void zoomToNearestMarker() {
+        getNearestMarker();
+    }
+
+    private void getNearestMarker() {
+        if(placesCoordinates != null || placesCoordinates.size() > 0){
+            Double minDistance = null;
+            LatLng nearestMarker = null;
+            for (LatLng latLng :
+                    placesCoordinates) {
+                Double distance = getDistanceInMeter(latLng);
+                if(distance != -1){
+                    if(minDistance != null){
+                        if(distance < minDistance){
+                            minDistance = distance;
+                            nearestMarker = latLng;
+                        }
+                    }else {
+                        minDistance = distance;
+                        nearestMarker = latLng;
+                    }
+                }
+            }
+            if(mMap != null && nearestMarker != null){
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nearestMarker, 16), 600, null);
+            }
+        }
+    }
+
+    private Double getDistanceInMeter(LatLng markerLatLng) {
+        if(userLastKnownLocation != null){
+            Location endPoint=new Location("locationB");
+            endPoint.setLatitude(markerLatLng.latitude);
+            endPoint.setLongitude(markerLatLng.longitude);
+
+            return (Double) (double) userLastKnownLocation.distanceTo(endPoint);
+
+        }else return (double) -1;
+    }
+
     private void initComponents() {
         dialogIsShown = false;
         firstLaunch = true;
+        placesCoordinates = new ArrayList<>();
         permissionsArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         geocoder = new Geocoder(getActivity());
 
@@ -338,6 +382,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                 for (DataSnapshot snap:
                         snapshot.getChildren()) {
                     ParkingPlace parkingPlace = snap.getValue(ParkingPlace.class);
+                    placesCoordinates.add(new LatLng(parkingPlace.getLatitude(), parkingPlace.getLongitude()));
                     createPlaceMarker(parkingPlace);
                 }
             }
