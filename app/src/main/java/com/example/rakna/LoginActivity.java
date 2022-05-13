@@ -126,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signIn();
-
             }
         });
     }
@@ -162,7 +161,6 @@ public class LoginActivity extends AppCompatActivity {
     //authentication with Email & password
     private void signInWithFirebase() {
         get();
-
         if (get_email.isEmpty()) {
             email.setError("Email is Required");
             spinKitView.setVisibility(View.INVISIBLE);
@@ -185,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, getString(R.string.error) + task.getException(), Toast.LENGTH_SHORT).show();
                     spinKitView.setVisibility(View.INVISIBLE);
+                    loadingDialog.dismiss();
                 }
-                loadingDialog.dismiss();
             }
         });
 
@@ -202,7 +200,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             String personName = acct.getDisplayName();
                             String personEmail = acct.getEmail();
                             Uri personPhoto = acct.getPhotoUrl();
@@ -214,6 +211,8 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (!snapshot.exists()) {
                                         updateFirebaseData(user);
+                                        goToHome();
+                                        loadingDialog.dismiss();
                                     } else {
                                         Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
                                     }
@@ -222,25 +221,23 @@ public class LoginActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                    startActivity(intent);
-                                    Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
-                                    LoginActivity.this.finish();
                                     loadingDialog.dismiss();
                                 }
-                            }, 2000);
-
+                            });
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
+                            loadingDialog.dismiss();
                         }
 
                     }
                 });
+    }
+
+    private void goToHome(){
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+        Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
+        LoginActivity.this.finish();
     }
 
     //create Request to Sign in with google
@@ -257,7 +254,6 @@ public class LoginActivity extends AppCompatActivity {
 
     //sign in with google
     private void signIn() {
-
         Intent intent = mGoogleSignInClient.getSignInIntent();
         activityResultLauncher.launch(intent);
     }
