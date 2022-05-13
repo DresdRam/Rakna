@@ -26,6 +26,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     BottomNavigationView navigationView;
     FrameLayout frameLayout;
     FloatingActionButton nearbyBtn;
+    private Thread connectionThread;
     private int lastItemId;
     private boolean checkedConnection;
     final HomeFragment homeFragment = new HomeFragment();
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     }
 
     private void initConnectionThread() {
-        Thread thread = new Thread() {
+        connectionThread = new Thread() {
             public void run() {
                 while(true){
                     if(!checkedConnection){
@@ -145,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
             }
         };
 
-        thread.start();
+        connectionThread.start();
     }
 
     private boolean isOnline() {
@@ -157,6 +158,23 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         LocaleHelper.setAppLanguage(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isOnline()){
+            initConnectionThread();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(connectionThread != null){
+            connectionThread.interrupt();
+            checkedConnection = false;
+        }
     }
 
     @Override
