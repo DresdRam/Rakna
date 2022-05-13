@@ -8,7 +8,7 @@ public class UserModel {
     private String userPhone;
     private String uri;
 
-    public UserModel(){
+    public UserModel() {
 
     }
 

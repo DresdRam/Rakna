@@ -34,7 +34,7 @@
     <string name="enterYPhone">Enter Your Phone</string>
     <string name="enterYpassord">Enter Your Password</string>
     <string name="emailIsRequier">Email is Required</string>
-    <string name="passordShort">Password Must Contain At Least One Upper Case Letter, Contains numbers and Be At Least 8 Characters</string>
+    <string name="passordShort">Password is too Short</string>
     <string name="enterVemail">Please Enter Valid Email</string>
     <string name="registerSuccess">Registered Successfully</string>
     <string name="error">Error !</string>
@@ -46,4 +46,5 @@
     <string name="signingUp">Signing Up</string>
     <string name="signingIn">Signing In</string>
     <string name="uploadingImage">Uploading Image</string>
+    <string name="enterVpass">Enter Valid Password</string>
 </resources>

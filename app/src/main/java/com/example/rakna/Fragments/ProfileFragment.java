@@ -306,12 +306,6 @@ public class ProfileFragment extends Fragment {
         activityResultLauncher.launch(null);
     }
 
-    private String getExtension(Uri uri) {
-        ContentResolver resolver = getActivity().getContentResolver();
-        MimeTypeMap map = MimeTypeMap.getSingleton();
-        return map.getExtensionFromMimeType(resolver.getType(uri));
-    }
-
     private void addToStorage(Uri uri) {
         storageReference = FirebaseStorage.getInstance().getReference("uploads").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         storageReference.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {

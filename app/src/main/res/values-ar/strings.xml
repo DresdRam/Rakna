@@ -34,7 +34,7 @@
     <string name="enterYPhone">ادخل رقم هاتفك</string>
     <string name="enterYpassord">ادخل كلمة المرور</string>
     <string name="emailIsRequier">البريد الالكتروني مطلوب</string>
-    <string name="passordShort">"كلمة المرور يجب ان تحتوي علي الاقل علي حرف واحد كبير و ارقام و ان يتكون علي الاقل من ثمانية احرف "</string>
+    <string name="passordShort">كلمة المرور قصيرة</string>
     <string name="enterVemail">من فضلك ادخل بريد الكتروني لائق</string>
     <string name="registerSuccess">تم التسجيل بنجاح</string>
     <string name="error">خطا !</string>
@@ -46,4 +46,5 @@
     <string name="signingUp">جاري التسجيل</string>
     <string name="signingIn">جاري تسجيل الدخول</string>
     <string name="uploadingImage">جاري رفع الصورة</string>
+    <string name="enterVpass">من فضلك ادخل رمز سري لائق</string>
 </resources>

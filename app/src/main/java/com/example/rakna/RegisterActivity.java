@@ -54,6 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
             email.setError(getString(R.string.emailIsRequier));
             return;
         }
+        if (!passwordIsValid(get_password)) {
+            password.setError(getString(R.string.enterVpass));
+            return;
+        }
         if (get_password.isEmpty()) {
             password.setError(getString(R.string.enterYpassord));
             return;
@@ -82,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth.createUserWithEmailAndPassword(get_email, get_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     storeData();
                     Toast.makeText(RegisterActivity.this, R.string.registerSuccess, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
@@ -128,10 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
         return Pattern.compile("^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$").matcher(s).matches();
     }
 
-    //regex for password
-    private boolean passwordIsValid(String s) {
-        return Pattern.compile("^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$").matcher(s).matches();
-    }
+
 
     //regex for phone
     private boolean phoneIsValid(String s) {
@@ -143,6 +144,11 @@ public class RegisterActivity extends AppCompatActivity {
         return Pattern.compile("^[a-z0-9!#$%&'*+\\=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$").matcher(s).matches();
     }
 
+
+    //regex for password
+    private boolean passwordIsValid(String s) {
+        return Pattern.compile("^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$").matcher(s).matches();
+    }
     //intent to Login Activity
     private void loginTextAction() {
         loginText.setOnClickListener(new View.OnClickListener() {

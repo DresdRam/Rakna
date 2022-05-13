@@ -70,13 +70,29 @@ public class LoginActivity extends AppCompatActivity {
         registerTxtAction();
         signWithGoogleAction();
         logInAction();
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                        if (googleSignInResult.isSuccess()) {
+                            GoogleSignInAccount acct = googleSignInResult.getSignInAccount();
+                            firebaseAuthWithGoogle(acct);
+                        } else {
+                            Log.i(TAG, googleSignInResult.toString());
+                        }
+                    }
+
+
+                });
     }
 
     //check user is already logged in
     @Override
     protected void onStart() {
         super.onStart();
-        checkUser();
+
         if (!isConnected()) {
             showDialog();
         }
@@ -88,48 +104,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUser() {
-        activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                        if (googleSignInResult.isSuccess()) {
-                            GoogleSignInAccount acct = googleSignInResult.getSignInAccount();
-                            String personName = acct.getDisplayName();
-                            String personEmail = acct.getEmail();
-                            Uri personPhoto = acct.getPhotoUrl();
-                            UserModel user = new UserModel(personName, personEmail, "+0000000000", personPhoto.toString());
-                            firebaseAuthWithGoogle(acct);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                                    Query query = databaseReference.orderByChild("userEmail").equalTo(personEmail);
-                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if (!snapshot.exists()) {
-                                                updateFirebaseData(user);
-                                            } else {
-                                                Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
-                                            }
 
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                        }
-                                    });
-                                }
-                            }, 1000);
-                        } else {
-                            Log.i(TAG, googleSignInResult.toString());
-                        }
-                    }
-
-
-                });
 
     }
 
@@ -187,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
     //authentication with Email & password
     private void signInWithFirebase() {
         get();
+
         if (get_email.isEmpty()) {
             email.setError("Email is Required");
             spinKitView.setVisibility(View.INVISIBLE);
@@ -217,7 +193,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        auth = FirebaseAuth.getInstance();
+
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         loadingDialog.show(getResources().getString(R.string.signingIn));
         auth.signInWithCredential(credential)
@@ -225,10 +202,38 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            LoginActivity.this.finish();
+
+                            String personName = acct.getDisplayName();
+                            String personEmail = acct.getEmail();
+                            Uri personPhoto = acct.getPhotoUrl();
+                            UserModel user = new UserModel(personName, personEmail, "+0000000000", personPhoto.toString());
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                            Query query = databaseReference.orderByChild("userEmail").equalTo(personEmail);
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (!snapshot.exists()) {
+                                        updateFirebaseData(user);
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    startActivity(intent);
+                                    Toast.makeText(LoginActivity.this, R.string.authenticationPass, Toast.LENGTH_SHORT).show();
+                                    LoginActivity.this.finish();
+                                }
+                            }, 2000);
+
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.authenticathinFaild, Toast.LENGTH_SHORT).show();
                         }
@@ -251,6 +256,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //sign in with google
     private void signIn() {
+
         Intent intent = mGoogleSignInClient.getSignInIntent();
         activityResultLauncher.launch(intent);
     }
@@ -295,4 +301,5 @@ public class LoginActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         LocaleHelper.setAppLanguage(this);
     }
+
 }
