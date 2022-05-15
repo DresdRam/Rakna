@@ -48,4 +48,8 @@
     <string name="uploadingImage">جاري رفع الصورة</string>
     <string name="enterVpass">من فضلك ادخل رمز سري لائق</string>
     <string name="failed">فشل</string>
+    <string name="addedToFavorites">تم الاضافة للمفضلة</string>
+    <string name="removedFromFavorites">تم الحذف من المفضلة</string>
+    <string name="favorites">المفضلة</string>
+    <string name="loadingFavorites">يتم تحميل المفضلة</string>
 </resources>

@@ -49,7 +49,8 @@
     <string name="enterVpass">Enter Valid Password</string>
     <string name="failed">Failed</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="addedToFavorites">Added To Favorites</string>
     <string name="removedFromFavorites">Removed From Favorites</string>
+    <string name="favorites">Favorites</string>
+    <string name="loadingFavorites">Loading Favorites</string>
 </resources>

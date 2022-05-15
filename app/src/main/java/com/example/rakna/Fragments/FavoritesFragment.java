@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.rakna.FavoritesAdapter;
 import com.example.rakna.HomeCommunicator;
 import com.example.rakna.ItemClickListener;
+import com.example.rakna.LoadingDialog;
 import com.example.rakna.Pojo.Favorite;
 import com.example.rakna.R;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -34,7 +35,7 @@ public class FavoritesFragment extends Fragment implements ItemClickListener{
     ArrayList<Favorite> favoritesData;
     RecyclerView favoritesRecyclerview;
     FavoritesAdapter mAdapter;
-    SpinKitView spinKitView;
+    LoadingDialog loadingDialog;
     HomeCommunicator activity;
 
 
@@ -49,7 +50,7 @@ public class FavoritesFragment extends Fragment implements ItemClickListener{
 
     private void initComponents() {
         favoritesData = new ArrayList<>();
-        spinKitView = view.findViewById(R.id.spinKit_favorites);
+        loadingDialog = new LoadingDialog(getActivity());
         activity = (HomeCommunicator) getActivity();
     }
 
@@ -58,7 +59,7 @@ public class FavoritesFragment extends Fragment implements ItemClickListener{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                spinKitView.setVisibility(View.VISIBLE);
+                loadingDialog.show(getResources().getString(R.string.loadingFavorites));
                 favoritesData.clear();
                 for (DataSnapshot dataSnapshot :
                         snapshot.getChildren()) {
@@ -80,7 +81,7 @@ public class FavoritesFragment extends Fragment implements ItemClickListener{
         mAdapter = new FavoritesAdapter(getActivity(), favoritesData, this);
         favoritesRecyclerview.setAdapter(mAdapter);
         favoritesRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 1));
-        spinKitView.setVisibility(View.GONE);
+        loadingDialog.dismiss();
     }
 
     @Override

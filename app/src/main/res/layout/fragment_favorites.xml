@@ -10,14 +10,14 @@
         android:layout_height="180dp"
         android:background="@drawable/settings_background_shape">
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spinKit_favorites"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            style="@style/SpinKitView.DoubleBounce"
-            android:visibility="visible"/>
+            android:text="@string/favorites"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 
