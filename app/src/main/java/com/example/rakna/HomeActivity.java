@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.example.rakna.Fragments.FavoritesFragment;
 import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
 import com.example.rakna.Fragments.SettingsFragment;
@@ -30,6 +31,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     private int lastItemId;
     private boolean checkedConnection;
     final HomeFragment homeFragment = new HomeFragment();
+    final FavoritesFragment favoritesFragment = new FavoritesFragment();
     final ProfileFragment profileFragment = new ProfileFragment();
     final SettingsFragment settingsFragment = new SettingsFragment();
     final FragmentManager supportFragmentManager = getSupportFragmentManager();
@@ -67,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
 
     //First Fragment when Home Activity open
     private void addFragmentsToManager() {
+        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, favoritesFragment, "FavoritesFragment").hide(favoritesFragment).commit();
         supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
         supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
         supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, homeFragment, "HomeFragment").commit();
@@ -80,14 +83,27 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
                 if (item.getItemId() == R.id.nav_home) {
                     if (lastItemId != item.getItemId()) {
                         supportFragmentManager.beginTransaction().show(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
                         supportFragmentManager.beginTransaction().hide(profileFragment).commit();
                         supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
                         nearbyBtn.setVisibility(View.VISIBLE);
                         lastItemId = item.getItemId();
                     }
-                } else if (item.getItemId() == R.id.nav_profile) {
+                }
+                else if (item.getItemId() == R.id.nav_favorites) {
                     if (lastItemId != item.getItemId()) {
                         supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().show(favoritesFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+                        nearbyBtn.setVisibility(View.GONE);
+                        lastItemId = item.getItemId();
+                    }
+                }
+                else if (item.getItemId() == R.id.nav_profile) {
+                    if (lastItemId != item.getItemId()) {
+                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
                         supportFragmentManager.beginTransaction().show(profileFragment).commit();
                         supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
                         nearbyBtn.setVisibility(View.GONE);
@@ -96,6 +112,7 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
                 } else if (item.getItemId() == R.id.nav_setting) {
                     if (lastItemId != item.getItemId()) {
                         supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
                         supportFragmentManager.beginTransaction().hide(profileFragment).commit();
                         supportFragmentManager.beginTransaction().show(settingsFragment).commit();
                         nearbyBtn.setVisibility(View.GONE);

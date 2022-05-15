@@ -2,6 +2,7 @@ package com.example.rakna;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,9 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rakna.Pojo.Car;
+import com.example.rakna.Pojo.Favorite;
+import com.example.rakna.Pojo.ParkingPlace;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +41,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     CarsAdapter mAdapter;
     TextView addressTextView;
     TextView freeTextView;
-    ImageButton backButton;
+    ImageButton backButton, addToFavoritesBtn;
     ImageView currentAnimatedCar;
     TextView currentAnimatedTV;
     CircularProgressIndicator loadingAnimation;
@@ -48,10 +53,12 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private int[] carsDrawablesArray;
     private ParkingPlace parkingPlace;
     private DatabaseReference databaseReference;
-    private boolean firstTimeData, checkedConnection;
+    private boolean firstTimeData, checkedConnection, isFavorite;
     private final int LEAVING_CAR = -1;
     private final int PARKING_CAR = 1;
     private Random random;
+    private Favorite favorite;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
         initComponents();
         initBackBtnListener();
+        initFavoritesBtnListener();
         initConnectionThread();
         startLoadingAnimation();
         setupFireBase();
@@ -75,14 +83,38 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         });
     }
 
+    private void initFavoritesBtnListener() {
+        addToFavoritesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addPlaceToFavorites();
+            }
+        });
+    }
+
+    private void addPlaceToFavorites() {
+        DatabaseReference favoritesReference = FirebaseDatabase.getInstance().getReference("Favorites").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        if(favorite != null){
+            if(isFavorite){
+                favoritesReference.child(favorite.getLocation()).removeValue();
+                Toast.makeText(this, getResources().getString(R.string.removedFromFavorites), Toast.LENGTH_LONG).show();
+            }else{
+                favoritesReference.child(favorite.getLocation()).setValue(favorite);
+                Toast.makeText(this, getResources().getString(R.string.addedToFavorites), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     private void initComponents() {
         addressTextView = findViewById(R.id.textView_address);
         freeTextView = findViewById(R.id.textView_free);
         backButton = findViewById(R.id.button_back_arrow);
+        addToFavoritesBtn = findViewById(R.id.button_add_to_favorites);
         loadingAnimation = findViewById(R.id.circular_progress_indicator);
         relativeLayout = findViewById(R.id.parking_place_layout);
         firstTimeData = false;
         checkedConnection = false;
+        isFavorite = false;
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         random = new Random();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking").child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
@@ -108,6 +140,11 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
                 if (!firstTimeData) {
                     firstTimeData = true;
+                    favorite = new Favorite();
+                    favorite.setLocation(parkingPlace.getAddress());
+                    favorite.setTotalSpots(String.valueOf(parkingPlace.getTotal()));
+                    favorite.setLatitude(parkingPlace.getLatitude());
+                    favorite.setLongitude(parkingPlace.getLongitude());
                     addressTextView.setText(parkingPlace.getAddress());
                     tempBooleanParkedCars = booleanParkedCars;
                     setupCarsData();
@@ -122,6 +159,26 @@ public class ParkingPlaceActivity extends AppCompatActivity {
             }
         };
         databaseReference.addValueEventListener(positionListener);
+        FirebaseDatabase.getInstance().getReference("Favorites").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(parkingPlace != null){
+                    if(snapshot.hasChild(parkingPlace.getAddress())){
+                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorites));
+                        isFavorite = true;
+                    }else{
+                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorite_border));
+                        isFavorite = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void compareBetweenLists() {

@@ -36,7 +36,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
-import com.example.rakna.ParkingPlace;
+import com.example.rakna.Pojo.ParkingPlace;
 import com.example.rakna.ParkingPlaceActivity;
 import com.example.rakna.R;
 import com.google.android.gms.location.FusedLocationProviderClient;

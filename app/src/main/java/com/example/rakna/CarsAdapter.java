@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rakna.Pojo.Car;
+
 import java.util.List;
 
 class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
@@ -57,7 +59,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
             c++;
         }
 
-        if (car.isBusy)
+        if (car.getBusy())
         {
             holder.carImage.setVisibility(View.VISIBLE);
         }
@@ -70,7 +72,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
                 holder.carImage.setTranslationX(-50);
             }
         }
-        holder.carImage.setImageResource(car.carImageResource);
+        holder.carImage.setImageResource(car.getCarImageResource());
         holder.parkNumber.setText(String.valueOf(position + 1));
 
     }

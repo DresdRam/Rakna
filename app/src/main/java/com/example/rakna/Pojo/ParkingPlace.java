@@ -1,4 +1,4 @@
-package com.example.rakna;
+package com.example.rakna.Pojo;
 
 import java.util.ArrayList;
 
