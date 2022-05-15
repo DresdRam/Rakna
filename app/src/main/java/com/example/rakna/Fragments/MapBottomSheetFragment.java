@@ -9,10 +9,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.rakna.BottomSheetCommunicator;
+import com.example.rakna.HomeCommunicator;
 import com.example.rakna.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.button.MaterialButton;
 
 public class MapBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -20,7 +19,7 @@ public class MapBottomSheetFragment extends BottomSheetDialogFragment {
     View view;
     Button navigateBtn;
     Button spectateBtn;
-    BottomSheetCommunicator activity;
+    HomeCommunicator activity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class MapBottomSheetFragment extends BottomSheetDialogFragment {
         navigateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.navigate();
+                activity.navigateToParkingLocation();
             }
         });
     }
@@ -51,7 +50,7 @@ public class MapBottomSheetFragment extends BottomSheetDialogFragment {
         spectateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.spectate();
+                activity.spectateParkingLocation();
             }
         });
     }
@@ -59,6 +58,6 @@ public class MapBottomSheetFragment extends BottomSheetDialogFragment {
     private void initComponents() {
         navigateBtn = view.findViewById(R.id.button_navigate);
         spectateBtn = view.findViewById(R.id.button_spectate);
-        activity = (BottomSheetCommunicator) getActivity();
+        activity = (HomeCommunicator) getActivity();
     }
 }

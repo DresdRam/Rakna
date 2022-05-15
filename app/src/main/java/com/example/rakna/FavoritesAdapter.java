@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rakna.Pojo.Car;
 import com.example.rakna.Pojo.Favorite;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,10 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public FavoritesAdapter(Context context, ArrayList<Favorite> data) {
+    public FavoritesAdapter(Context context, ArrayList<Favorite> data, ItemClickListener mClickListener) {
         this.mContext = context;
         this.favoritesData = data;
+        this.mClickListener = mClickListener;
     }
 
 
@@ -65,21 +67,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             totalTextView = itemView.findViewById(R.id.textView_totalPlaces_favorites);
             latitudeTextView = itemView.findViewById(R.id.textView_latitude_favorites);
             longitudeTextView = itemView.findViewById(R.id.textView_longitude_favorites);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick();
+            Favorite favorite = favoritesData.get(getBindingAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(new LatLng(favorite.getLatitude(), favorite.getLongitude()));
         }
     }
 
-    // convenience method for getting data at click position
-    Favorite getItem(int id) {
-        return favoritesData.get(id);
-    }
-
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
 }

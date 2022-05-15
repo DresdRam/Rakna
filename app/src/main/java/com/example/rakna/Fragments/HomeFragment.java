@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
             if (mMap != null) {
                 userLastKnownLocation = locationResult.getLastLocation();
                 setUserLocationMarker(locationResult.getLastLocation());
-                if (firstLaunch){
+                if (firstLaunch) {
                     zoomToUserLocation();
                     firstLaunch = false;
                 }
@@ -120,50 +120,50 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
         initComponents();
         initActivityResultLauncher();
-        
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
         return view;
     }
 
     public void zoomToNearestMarker() {
-        getNearestMarker();
-    }
-
-    private void getNearestMarker() {
-        if(placesCoordinates != null || placesCoordinates.size() > 0){
+        if (placesCoordinates != null || placesCoordinates.size() > 0) {
             Double minDistance = null;
             LatLng nearestMarker = null;
             for (LatLng latLng :
                     placesCoordinates) {
                 Double distance = getDistanceInMeter(latLng);
-                if(distance != -1){
-                    if(minDistance != null){
-                        if(distance < minDistance){
+                if (distance != -1) {
+                    if (minDistance != null) {
+                        if (distance < minDistance) {
                             minDistance = distance;
                             nearestMarker = latLng;
                         }
-                    }else {
+                    } else {
                         minDistance = distance;
                         nearestMarker = latLng;
                     }
                 }
             }
-            if(mMap != null && nearestMarker != null){
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nearestMarker, 16), 600, null);
-            }
+            zoomToMarker(nearestMarker);
+        }
+    }
+
+    public void zoomToMarker(LatLng latLng) {
+        if (mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16), 600, null);
         }
     }
 
     private Double getDistanceInMeter(LatLng markerLatLng) {
-        if(userLastKnownLocation != null){
-            Location endPoint=new Location("locationB");
+        if (userLastKnownLocation != null) {
+            Location endPoint = new Location("locationB");
             endPoint.setLatitude(markerLatLng.latitude);
             endPoint.setLongitude(markerLatLng.longitude);
 
             return (Double) (double) userLastKnownLocation.distanceTo(endPoint);
 
-        }else return (double) -1;
+        } else return (double) -1;
     }
 
     private void initComponents() {
@@ -340,7 +340,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     public void onResume() {
         super.onResume();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            if(dialogIsShown){
+            if (dialogIsShown) {
                 permissionDialog.dismiss();
             }
         }
@@ -362,7 +362,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     }
 
     private void cancelRouting() {
-        if(routing != null){
+        if (routing != null) {
             routing.cancel(true);
         }
     }
@@ -379,7 +379,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap:
+                for (DataSnapshot snap :
                         snapshot.getChildren()) {
                     ParkingPlace parkingPlace = snap.getValue(ParkingPlace.class);
                     placesCoordinates.add(new LatLng(parkingPlace.getLatitude(), parkingPlace.getLongitude()));
@@ -406,7 +406,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        if(Objects.equals(marker.getTitle(), PARKING_PLACE)){
+        if (Objects.equals(marker.getTitle(), PARKING_PLACE)) {
             currentClickedMarker = marker;
             showBottomSheet();
         }
@@ -418,8 +418,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         bottomSheetFragment.show(getActivity().getSupportFragmentManager(), "BottomSheetFragment");
     }
 
-    private void dismissBottomSheet(){
-        if(bottomSheetFragment != null){
+    private void dismissBottomSheet() {
+        if (bottomSheetFragment != null) {
             bottomSheetFragment.dismiss();
         }
     }

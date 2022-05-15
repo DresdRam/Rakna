@@ -1,5 +1,7 @@
 package com.example.rakna;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public interface ItemClickListener {
-    void onItemClick();
+    void onItemClick(LatLng latLng);
 }

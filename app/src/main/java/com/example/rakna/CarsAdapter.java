@@ -19,7 +19,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
 
     private final List<Car> carsData;
     private final Context mContext;
-    private BottomSheetCommunicator mClickListener;
+    private HomeCommunicator mClickListener;
     private final int columns;
     private int c = 1;
 
@@ -104,7 +104,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     }
 
     // allows clicks events to be caught
-    void setClickListener(BottomSheetCommunicator bottomSheetCommunicator) {
-        this.mClickListener = bottomSheetCommunicator;
+    void setClickListener(HomeCommunicator homeCommunicator) {
+        this.mClickListener = homeCommunicator;
     }
 }

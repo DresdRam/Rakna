@@ -16,13 +16,14 @@ import com.example.rakna.Fragments.FavoritesFragment;
 import com.example.rakna.Fragments.HomeFragment;
 import com.example.rakna.Fragments.ProfileFragment;
 import com.example.rakna.Fragments.SettingsFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-public class HomeActivity extends AppCompatActivity implements BottomSheetCommunicator {
+public class HomeActivity extends AppCompatActivity implements HomeCommunicator {
 
     BottomNavigationView navigationView;
     FrameLayout frameLayout;
@@ -82,46 +83,62 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_home) {
                     if (lastItemId != item.getItemId()) {
-                        supportFragmentManager.beginTransaction().show(homeFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
-                        nearbyBtn.setVisibility(View.VISIBLE);
-                        lastItemId = item.getItemId();
+                        showHomeFragment(item.getItemId());
                     }
                 }
                 else if (item.getItemId() == R.id.nav_favorites) {
                     if (lastItemId != item.getItemId()) {
-                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
-                        supportFragmentManager.beginTransaction().show(favoritesFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
-                        nearbyBtn.setVisibility(View.GONE);
-                        lastItemId = item.getItemId();
+                        showFavoritesFragment(item.getItemId());
                     }
                 }
                 else if (item.getItemId() == R.id.nav_profile) {
                     if (lastItemId != item.getItemId()) {
-                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
-                        supportFragmentManager.beginTransaction().show(profileFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
-                        nearbyBtn.setVisibility(View.GONE);
-                        lastItemId = item.getItemId();
+                        showProfileFragment(item.getItemId());
                     }
                 } else if (item.getItemId() == R.id.nav_setting) {
                     if (lastItemId != item.getItemId()) {
-                        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
-                        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
-                        supportFragmentManager.beginTransaction().show(settingsFragment).commit();
-                        nearbyBtn.setVisibility(View.GONE);
-                        lastItemId = item.getItemId();
+                        showSettingsFragment(item.getItemId());
                     }
                 }
                 return true;
             }
         });
+    }
+
+    private void showHomeFragment(int id){
+        supportFragmentManager.beginTransaction().show(homeFragment).commit();
+        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
+        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+        nearbyBtn.setVisibility(View.VISIBLE);
+        lastItemId = id;
+    }
+
+    private void showFavoritesFragment(int id){
+        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        supportFragmentManager.beginTransaction().show(favoritesFragment).commit();
+        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+        nearbyBtn.setVisibility(View.GONE);
+        lastItemId = id;
+    }
+
+    private void showProfileFragment(int id){
+        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
+        supportFragmentManager.beginTransaction().show(profileFragment).commit();
+        supportFragmentManager.beginTransaction().hide(settingsFragment).commit();
+        nearbyBtn.setVisibility(View.GONE);
+        lastItemId = id;
+    }
+
+    private void showSettingsFragment(int id){
+        supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        supportFragmentManager.beginTransaction().hide(favoritesFragment).commit();
+        supportFragmentManager.beginTransaction().hide(profileFragment).commit();
+        supportFragmentManager.beginTransaction().show(settingsFragment).commit();
+        nearbyBtn.setVisibility(View.GONE);
+        lastItemId = id;
     }
 
     private void initConnectionThread() {
@@ -195,12 +212,19 @@ public class HomeActivity extends AppCompatActivity implements BottomSheetCommun
     }
 
     @Override
-    public void navigate() {
+    public void navigateToParkingLocation() {
         homeFragment.navigateToParkingPlace();
     }
 
     @Override
-    public void spectate() {
+    public void spectateParkingLocation() {
         homeFragment.spectateParkingPlace();
+    }
+
+    @Override
+    public void zoomToParkingLocation(LatLng latLng){
+        showHomeFragment(R.id.nav_home);
+        navigationView.setSelectedItemId(R.id.nav_home);
+        homeFragment.zoomToMarker(latLng);
     }
 }

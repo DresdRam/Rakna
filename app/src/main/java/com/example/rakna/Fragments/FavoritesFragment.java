@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rakna.FavoritesAdapter;
+import com.example.rakna.HomeCommunicator;
+import com.example.rakna.ItemClickListener;
 import com.example.rakna.Pojo.Favorite;
 import com.example.rakna.R;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,13 +28,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesFragment extends Fragment {
+public class FavoritesFragment extends Fragment implements ItemClickListener{
 
     View view;
     ArrayList<Favorite> favoritesData;
     RecyclerView favoritesRecyclerview;
     FavoritesAdapter mAdapter;
     SpinKitView spinKitView;
+    HomeCommunicator activity;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +50,7 @@ public class FavoritesFragment extends Fragment {
     private void initComponents() {
         favoritesData = new ArrayList<>();
         spinKitView = view.findViewById(R.id.spinKit_favorites);
+        activity = (HomeCommunicator) getActivity();
     }
 
     private void getFavoritesData() {
@@ -71,10 +77,14 @@ public class FavoritesFragment extends Fragment {
 
     private void setUpFavoritesAdapter() {
         favoritesRecyclerview = view.findViewById(R.id.recycler_view_favorites);
-        mAdapter = new FavoritesAdapter(getActivity(), favoritesData);
+        mAdapter = new FavoritesAdapter(getActivity(), favoritesData, this);
         favoritesRecyclerview.setAdapter(mAdapter);
         favoritesRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         spinKitView.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onItemClick(LatLng latLng) {
+        activity.zoomToParkingLocation(latLng);
+    }
 }
