@@ -212,10 +212,10 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (!snapshot.exists()) {
                                         updateFirebaseData(user);
-                                        goToHome();
                                     } else {
                                         Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
                                     }
+                                    goToHome();
                                     loadingDialog.dismiss();
                                 }
 

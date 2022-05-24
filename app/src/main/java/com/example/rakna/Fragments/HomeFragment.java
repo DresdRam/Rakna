@@ -145,7 +145,9 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                     }
                 }
             }
-            zoomToMarker(nearestMarker);
+            if(nearestMarker != null){
+                zoomToMarker(nearestMarker);
+            }
         }
     }
 
@@ -400,7 +402,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         markerOptions.position(latLng);
         markerOptions.title(PARKING_PLACE);
         markerOptions.snippet(parkingPlace.getAddress());
-        markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_parking_location_icon));
+        markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_parking_location_icon));
         mMap.addMarker(markerOptions);
     }
 
