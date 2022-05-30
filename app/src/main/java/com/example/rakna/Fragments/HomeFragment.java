@@ -36,6 +36,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.example.rakna.Pojo.CarSpot;
 import com.example.rakna.Pojo.ParkingPlace;
 import com.example.rakna.ParkingPlaceActivity;
 import com.example.rakna.R;
@@ -123,7 +124,26 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
+        createDummyData();
         return view;
+    }
+
+    private void createDummyData() {
+        CarSpot carSpot = new CarSpot(0, true, "Mahmoud Salah");
+        CarSpot carSpot1 = new CarSpot(1, false);
+        CarSpot carSpot2 = new CarSpot(2, true,"Mohammed Hossam");
+        CarSpot carSpot3 = new CarSpot(3, false);
+        CarSpot carSpot4 = new CarSpot(4, true,"Mahmoud Magdy");
+        ArrayList<CarSpot> carSpots = new ArrayList<>();
+        ArrayList<String> users = new ArrayList<>();
+        users.add("carSpot");
+        users.add("");
+        users.add("");
+        users.add("");
+        users.add("carSpot4");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Parking").child("Parked").child("14 Abou Bakr El-Sedeek, Al Bitash Sharq, Dekhela, Alexandria Governorate");
+        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Booking").child("14 Abou Bakr El-Sedeek, Al Bitash Sharq, Dekhela, Alexandria Governorate");
+        reference.setValue(users);
     }
 
     public void zoomToNearestMarker() {

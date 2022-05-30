@@ -4,28 +4,24 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rakna.Pojo.Car;
 import com.example.rakna.Pojo.Favorite;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     private final ArrayList<Favorite> favoritesData;
     private final Context mContext;
-    private ItemClickListener mClickListener;
+    private FavoritesItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public FavoritesAdapter(Context context, ArrayList<Favorite> data, ItemClickListener mClickListener) {
+    public FavoritesAdapter(Context context, ArrayList<Favorite> data, FavoritesItemClickListener mClickListener) {
         this.mContext = context;
         this.favoritesData = data;
         this.mClickListener = mClickListener;

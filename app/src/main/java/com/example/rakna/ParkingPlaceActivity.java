@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.rakna.Pojo.Car;
 import com.example.rakna.Pojo.Favorite;
+import com.example.rakna.Pojo.CarSpot;
 import com.example.rakna.Pojo.ParkingPlace;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -35,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ParkingPlaceActivity extends AppCompatActivity {
+public class ParkingPlaceActivity extends AppCompatActivity implements ParkingItemClickListener {
 
     RecyclerView carsRecyclerview;
     CarsAdapter mAdapter;
@@ -43,13 +45,15 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     TextView freeTextView;
     ImageButton backButton, addToFavoritesBtn;
     ImageView currentAnimatedCar;
-    TextView currentAnimatedTV;
+    Button currentAnimatedButton;
     CircularProgressIndicator loadingAnimation;
     RelativeLayout relativeLayout;
     private ArrayList<Car> parkedCars;
     private ArrayList<Boolean> booleanParkedCars;
     private ArrayList<Boolean> tempBooleanParkedCars;
+    private ArrayList<CarSpot> bookingList;
     private Toast mToast;
+    private String parkingPlaceName;
     private int[] carsDrawablesArray;
     private ParkingPlace parkingPlace;
     private DatabaseReference databaseReference;
@@ -58,7 +62,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private final int PARKING_CAR = 1;
     private Random random;
     private Favorite favorite;
-    private Toast toast;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +98,11 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
     private void addPlaceToFavorites() {
         DatabaseReference favoritesReference = FirebaseDatabase.getInstance().getReference("Favorites").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        if(favorite != null){
-            if(isFavorite){
+        if (favorite != null) {
+            if (isFavorite) {
                 favoritesReference.child(favorite.getLocation()).removeValue();
                 Toast.makeText(this, getResources().getString(R.string.removedFromFavorites), Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 favoritesReference.child(favorite.getLocation()).setValue(favorite);
                 Toast.makeText(this, getResources().getString(R.string.addedToFavorites), Toast.LENGTH_LONG).show();
             }
@@ -115,9 +119,11 @@ public class ParkingPlaceActivity extends AppCompatActivity {
         firstTimeData = false;
         checkedConnection = false;
         isFavorite = false;
+        parkingPlaceName = getIntent().getStringExtra("ParkingPlaceAddress");
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         random = new Random();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Parking").child("Parking Locations").child(getIntent().getStringExtra("ParkingPlaceAddress"));
+        bookingList = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         carsDrawablesArray = new int[]{R.drawable.ic_car_one, R.drawable.ic_car_two, R.drawable.ic_car_three, R.drawable.ic_car_four, R.drawable.ic_car_five};
         addressTextView.setSelected(true);
 
@@ -126,16 +132,35 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void setupFireBase() {
         ValueEventListener positionListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                parkingPlace = dataSnapshot.getValue(ParkingPlace.class);
+            public void onDataChange(DataSnapshot snapshot) {
+                userName = snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userName").getValue().toString();
+                parkingPlace = snapshot.child("Parking").child("Parking Locations").child(parkingPlaceName).getValue(ParkingPlace.class);
                 assert parkingPlace != null;
                 booleanParkedCars = parkingPlace.getPositions();
+
                 if (parkingPlace.getFree() == parkingPlace.getTotal()) {
                     freeTextView.setText(getResources().getString(R.string.full));
                     freeTextView.setTextColor(getResources().getColor(R.color.red));
                 } else {
                     freeTextView.setText(String.valueOf(parkingPlace.getFree()));
                     freeTextView.setTextColor(getResources().getColor(R.color.white));
+                }
+
+                if (parkingPlace != null) {
+                    if (snapshot.child("Favorites").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).hasChild(parkingPlaceName)) {
+                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorites));
+                        isFavorite = true;
+                    } else {
+                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorite_border));
+                        isFavorite = false;
+                    }
+                }
+
+                bookingList.clear();
+                for (DataSnapshot dataSnapshot :
+                        snapshot.child("Booking").child(parkingPlaceName).getChildren()) {
+                    CarSpot carSpot = dataSnapshot.getValue(CarSpot.class);
+                    bookingList.add(carSpot);
                 }
 
                 if (!firstTimeData) {
@@ -159,26 +184,6 @@ public class ParkingPlaceActivity extends AppCompatActivity {
             }
         };
         databaseReference.addValueEventListener(positionListener);
-        FirebaseDatabase.getInstance().getReference("Favorites").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(parkingPlace != null){
-                    if(snapshot.hasChild(parkingPlace.getAddress())){
-                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorites));
-                        isFavorite = true;
-                    }else{
-                        addToFavoritesBtn.setBackground(ContextCompat.getDrawable(ParkingPlaceActivity.this, R.drawable.ic_favorite_border));
-                        isFavorite = false;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void compareBetweenLists() {
@@ -214,7 +219,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
     private void animateLeavingCar(int position) {
         currentAnimatedCar = carsRecyclerview.getChildAt(position).findViewById(R.id.iv_car);
-        currentAnimatedTV = carsRecyclerview.getChildAt(position).findViewById(R.id.tv_park_number);
+        currentAnimatedButton = carsRecyclerview.getChildAt(position).findViewById(R.id.button_book_select);
         ObjectAnimator moveAnimation;
         if (currentAnimatedCar.getScaleX() == 1f) {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", 50);
@@ -222,15 +227,18 @@ public class ParkingPlaceActivity extends AppCompatActivity {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", -50);
         }
         ObjectAnimator fadeAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, View.ALPHA, 1, 0);
+        ObjectAnimator fadeAnimation2 = ObjectAnimator.ofFloat(currentAnimatedButton, View.ALPHA, 0, 1);
         moveAnimation.setDuration(800);
         fadeAnimation.setDuration(800);
+        fadeAnimation2.setDuration(800);
         moveAnimation.start();
         fadeAnimation.start();
+        fadeAnimation2.start();
     }
 
     private void animateParkingCar(int position) {
         currentAnimatedCar = carsRecyclerview.getChildAt(position).findViewById(R.id.iv_car);
-        currentAnimatedTV = carsRecyclerview.getChildAt(position).findViewById(R.id.tv_park_number);
+        currentAnimatedButton = carsRecyclerview.getChildAt(position).findViewById(R.id.button_book_select);
         currentAnimatedCar.setImageResource(carsDrawablesArray[random.nextInt(5)]);
         currentAnimatedCar.setVisibility(View.VISIBLE);
         ObjectAnimator moveAnimation;
@@ -240,10 +248,20 @@ public class ParkingPlaceActivity extends AppCompatActivity {
             moveAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, "translationX", 0);
         }
         ObjectAnimator fadeAnimation = ObjectAnimator.ofFloat(currentAnimatedCar, View.ALPHA, 0, 1);
+        ObjectAnimator fadeAnimation2 = ObjectAnimator.ofFloat(currentAnimatedButton, View.ALPHA, 1, 0);
         moveAnimation.setDuration(800);
         fadeAnimation.setDuration(800);
+        fadeAnimation2.setDuration(400);
         moveAnimation.start();
         fadeAnimation.start();
+        fadeAnimation2.start();
+        setBookedToFalse(position);
+    }
+
+    private void setBookedToFalse(int position) {
+        CarSpot carSpot = new CarSpot(position, false);
+        databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(position)).setValue(carSpot);
+        currentAnimatedButton.setText(getResources().getString(R.string.select));
     }
 
     private void setupCarsData() {
@@ -259,7 +277,7 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void setupParkingRecyclerview() {
         int columns = parkingPlace.getColumns();
         carsRecyclerview = findViewById(R.id.rv_parking);
-        mAdapter = new CarsAdapter(this, parkedCars, columns);
+        mAdapter = new CarsAdapter(this, parkedCars, bookingList, columns, this);
         carsRecyclerview.setAdapter(mAdapter);
         carsRecyclerview.setLayoutManager(new GridLayoutManager(this, columns));
         stopLoadingAnimation();
@@ -269,8 +287,8 @@ public class ParkingPlaceActivity extends AppCompatActivity {
     private void initConnectionThread() {
         Thread thread = new Thread() {
             public void run() {
-                while(true){
-                    if(!checkedConnection){
+                while (true) {
+                    if (!checkedConnection) {
                         if (!isOnline()) {
                             checkedConnection = true;
                             Snackbar snackbar = Snackbar.make(relativeLayout, "", Snackbar.LENGTH_INDEFINITE);
@@ -325,6 +343,52 @@ public class ParkingPlaceActivity extends AppCompatActivity {
 
     private void stopLoadingAnimation() {
         loadingAnimation.hide();
+    }
+
+    @Override
+    public void onButtonClicked(int position) {
+        CarSpot carSpot = bookingList.get(position);
+        currentAnimatedButton = carsRecyclerview.getChildAt(position).findViewById(R.id.button_book_select);
+        if(currentAnimatedButton.getAlpha() == 1f){
+            if(currentAnimatedButton.getText().equals(getResources().getString(R.string.select))){
+                carSpot.setBooked(true);
+                carSpot.setUserName(userName);
+                databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(position)).setValue(carSpot);
+                currentAnimatedButton.setText(getResources().getString(R.string.booked));
+            }else{
+                if (carSpot.isBooked()) {
+                    mToast.cancel();
+                    mToast.setText(getResources().getString(R.string.bookedBy) + " " + carSpot.getUserName());
+                    mToast.show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onCarClicked(int position) {
+        databaseReference.child("Parking").child("Parked").child(parkingPlaceName).child(String.valueOf(position)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isParked = booleanParkedCars.get(position);
+                if (isParked) {
+                    if (snapshot.exists()) {
+                        mToast.cancel();
+                        mToast.setText(getResources().getString(R.string.parkedBy) + snapshot.getValue().toString());
+                        mToast.show();
+                    } else {
+                        mToast.cancel();
+                        mToast.setText(getResources().getString(R.string.parkedBy) + " " + getResources().getString(R.string.nonRaknaUser));
+                        mToast.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
 

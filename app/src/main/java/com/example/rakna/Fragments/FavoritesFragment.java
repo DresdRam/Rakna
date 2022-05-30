@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 
 import com.example.rakna.FavoritesAdapter;
 import com.example.rakna.HomeCommunicator;
-import com.example.rakna.ItemClickListener;
+import com.example.rakna.FavoritesItemClickListener;
 import com.example.rakna.LoadingDialog;
 import com.example.rakna.Pojo.Favorite;
 import com.example.rakna.R;
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,9 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class FavoritesFragment extends Fragment implements ItemClickListener{
+public class FavoritesFragment extends Fragment implements FavoritesItemClickListener {
 
     View view;
     ArrayList<Favorite> favoritesData;

@@ -52,4 +52,9 @@
     <string name="removedFromFavorites">تم الحذف من المفضلة</string>
     <string name="favorites">المفضلة</string>
     <string name="loadingFavorites">يتم تحميل المفضلة</string>
+    <string name="booked">محجوز</string>
+    <string name="select">اختر</string>
+    <string name="parkedBy">هذا المكان ركن فيه</string>
+    <string name="bookedBy">هذا المكان حجزه</string>
+    <string name="nonRaknaUser">شخص ليس من مستخدمين ركنة</string>
 </resources>

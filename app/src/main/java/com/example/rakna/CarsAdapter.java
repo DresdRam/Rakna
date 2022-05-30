@@ -4,37 +4,42 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rakna.Pojo.Car;
+import com.example.rakna.Pojo.CarSpot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
 
     private final List<Car> carsData;
-    private final Context mContext;
-    private HomeCommunicator mClickListener;
+    private final ArrayList<CarSpot> bookingList;
+    private final Context context;
+    private ParkingItemClickListener clickListener;
     private final int columns;
     private int c = 1;
 
     // data is passed into the constructor
-    CarsAdapter(Context context, List<Car> data, int columns) {
-        this.mContext = context;
+    CarsAdapter(Context context, List<Car> data, ArrayList<CarSpot> bookingList, int columns, ParkingItemClickListener clickListener) {
+        this.context = context;
         this.carsData = data;
         this.columns = columns;
+        this.bookingList = bookingList;
+        this.clickListener = clickListener;
     }
 
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.car_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.car_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -42,7 +47,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Car car = carsData.get(position);
-
+        CarSpot booking = bookingList.get(position);
         if(c == 1 && c != columns){
             holder.layout.setBackgroundResource(R.drawable.ic_cardview_background_left);
             c++;
@@ -62,6 +67,8 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
         if (car.getBusy())
         {
             holder.carImage.setVisibility(View.VISIBLE);
+            holder.button.setAlpha(0);
+            holder.button.setText(context.getResources().getString(R.string.select));
         }
         else
         {
@@ -71,10 +78,15 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
             }else{
                 holder.carImage.setTranslationX(-50);
             }
+            if(booking.isBooked()){
+                holder.button.setAlpha(1f);
+                holder.button.setText(context.getResources().getString(R.string.booked));
+            }else{
+                holder.button.setAlpha(1f);
+                holder.button.setText(context.getResources().getString(R.string.select));
+            }
         }
         holder.carImage.setImageResource(car.getCarImageResource());
-        holder.parkNumber.setText(String.valueOf(position + 1));
-
     }
 
     // total number of items
@@ -87,24 +99,38 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView carImage;
-        TextView parkNumber;
+        Button button;
         ConstraintLayout layout;
 
         ViewHolder(View itemView) {
             super(itemView);
             carImage = itemView.findViewById(R.id.iv_car);
-            parkNumber = itemView.findViewById(R.id.tv_park_number);
+            button = itemView.findViewById(R.id.button_book_select);
             layout = itemView.findViewById(R.id.car_item_layout);
+            initButtonListener();
+            initCarListener();
         }
-    }
 
-    // convenience method for getting data at click position
-    Car getItem(int id) {
-        return carsData.get(id);
-    }
+        private void initCarListener() {
+            carImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null){
+                        clickListener.onCarClicked(getBindingAdapterPosition());
+                    }
+                }
+            });
+        }
 
-    // allows clicks events to be caught
-    void setClickListener(HomeCommunicator homeCommunicator) {
-        this.mClickListener = homeCommunicator;
+        private void initButtonListener() {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null){
+                        clickListener.onButtonClicked(getBindingAdapterPosition());
+                    }
+                }
+            });
+        }
     }
 }

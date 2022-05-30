@@ -53,4 +53,9 @@
     <string name="removedFromFavorites">Removed From Favorites</string>
     <string name="favorites">Favorites</string>
     <string name="loadingFavorites">Loading Favorites</string>
+    <string name="booked">Booked</string>
+    <string name="select">Select</string>
+    <string name="parkedBy">This Spot Is Parked By</string>
+    <string name="bookedBy">This Spot Is Booked By</string>
+    <string name="nonRaknaUser">Non Rakna User</string>
 </resources>
