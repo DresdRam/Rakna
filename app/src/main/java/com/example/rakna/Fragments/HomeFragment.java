@@ -2,6 +2,7 @@ package com.example.rakna.Fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,8 +30,12 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -121,7 +127,6 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
         initComponents();
         initActivityResultLauncher();
-
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
         createDummyData();
@@ -131,9 +136,9 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private void createDummyData() {
         CarSpot carSpot = new CarSpot(0, true, "Mahmoud Salah");
         CarSpot carSpot1 = new CarSpot(1, false);
-        CarSpot carSpot2 = new CarSpot(2, true,"Mohammed Hossam");
+        CarSpot carSpot2 = new CarSpot(2, true, "Mohammed Hossam");
         CarSpot carSpot3 = new CarSpot(3, false);
-        CarSpot carSpot4 = new CarSpot(4, true,"Mahmoud Magdy");
+        CarSpot carSpot4 = new CarSpot(4, true, "Mahmoud Magdy");
         ArrayList<CarSpot> carSpots = new ArrayList<>();
         ArrayList<String> users = new ArrayList<>();
         users.add("carSpot");
@@ -165,7 +170,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
                     }
                 }
             }
-            if(nearestMarker != null){
+            if (nearestMarker != null) {
                 zoomToMarker(nearestMarker);
             }
         }
@@ -194,9 +199,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         placesCoordinates = new ArrayList<>();
         permissionsArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         geocoder = new Geocoder(getActivity());
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(1000);
@@ -531,4 +534,5 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     public void onRoutingCancelled() {
         route();
     }
+
 }

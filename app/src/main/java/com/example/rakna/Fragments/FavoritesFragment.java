@@ -1,5 +1,6 @@
 package com.example.rakna.Fragments;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.rakna.FavoritesAdapter;
 import com.example.rakna.HomeCommunicator;
@@ -35,6 +38,8 @@ public class FavoritesFragment extends Fragment implements FavoritesItemClickLis
     FavoritesAdapter mAdapter;
     LoadingDialog loadingDialog;
     HomeCommunicator activity;
+    ImageView imageView;
+    TextView txt;
 
 
     @Override
@@ -50,6 +55,8 @@ public class FavoritesFragment extends Fragment implements FavoritesItemClickLis
         favoritesData = new ArrayList<>();
         loadingDialog = new LoadingDialog(getActivity());
         activity = (HomeCommunicator) getActivity();
+        imageView = view.findViewById(R.id.image_park);
+        txt = view.findViewById(R.id.text_parking);
     }
 
     private void getFavoritesData() {
@@ -57,14 +64,23 @@ public class FavoritesFragment extends Fragment implements FavoritesItemClickLis
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                loadingDialog.show(getResources().getString(R.string.loadingFavorites));
-                favoritesData.clear();
-                for (DataSnapshot dataSnapshot :
-                        snapshot.getChildren()) {
-                    Favorite favorite = dataSnapshot.getValue(Favorite.class);
-                    favoritesData.add(favorite);
+                if (snapshot.exists()) {
+                    imageView.setVisibility(View.INVISIBLE);
+                    txt.setVisibility(View.INVISIBLE);
+                    loadingDialog.show(getResources().getString(R.string.loadingFavorites));
+                    favoritesData.clear();
+                    for (DataSnapshot dataSnapshot :
+                            snapshot.getChildren()) {
+                        Favorite favorite = dataSnapshot.getValue(Favorite.class);
+                        favoritesData.add(favorite);
+                    }
+                    setUpFavoritesAdapter();
+                }else {
+                    favoritesData.clear();
+                    imageView.setVisibility(View.VISIBLE);
+                    txt.setVisibility(View.VISIBLE);
+
                 }
-                setUpFavoritesAdapter();
             }
 
             @Override

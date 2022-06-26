@@ -70,10 +70,10 @@ public class HomeActivity extends AppCompatActivity implements HomeCommunicator 
 
     //First Fragment when Home Activity open
     private void addFragmentsToManager() {
-        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, favoritesFragment, "FavoritesFragment").hide(favoritesFragment).commit();
-        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
-        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
-        supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.body_container, homeFragment, "HomeFragment").commit();
+        supportFragmentManager.beginTransaction().add(R.id.body_container, favoritesFragment, "FavoritesFragment").hide(favoritesFragment).commit();
+        supportFragmentManager.beginTransaction().add(R.id.body_container, profileFragment, "ProfileFragment").hide(profileFragment).commit();
+        supportFragmentManager.beginTransaction().add(R.id.body_container, settingsFragment, "SettingsFragment").hide(settingsFragment).commit();
+        supportFragmentManager.beginTransaction().add(R.id.body_container, homeFragment, "HomeFragment").commit();
     }
 
     //this method to handle transaction between Fragments

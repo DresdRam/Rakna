@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rakna.Pojo.UserModel;
+import com.example.rakna.Pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText name, phone, email, password;
     Button signUp;
     String get_name, get_phone, get_email, get_password;
-    UserModel model;
+    User model;
     FirebaseUser user;
     LoadingDialog loadingDialog;
 
@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
         get();
         user = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference("Users");
-        model = new UserModel(user.getUid(), get_name, get_password, get_email, get_phone);
+        model = new User(user.getUid(), get_name, get_password, get_email, get_phone);
         ref.child(user.getUid()).setValue(model);
     }
 

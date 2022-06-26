@@ -1,15 +1,22 @@
 package com.example.rakna.Fragments;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,26 +27,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.rakna.LoadingDialog;
-import com.example.rakna.LoginActivity;
+import com.example.rakna.Pojo.User;
 import com.example.rakna.R;
-import com.example.rakna.Pojo.UserModel;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,20 +42,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.protobuf.Any;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import kotlin.Metadata;
 
 
 public class ProfileFragment extends Fragment {
@@ -163,12 +152,12 @@ public class ProfileFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserModel userModel = snapshot.getValue(UserModel.class);
-                name.setText(userModel.getUserName());
-                password.setText(userModel.getUserPassword());
-                phone.setText(userModel.getUserPhone());
-                username.setText(userModel.getUserName());
-                userEmail.setText(userModel.getUserEmail());
+                User user = snapshot.getValue(User.class);
+                name.setText(user.getUserName());
+                password.setText(user.getUserPassword());
+                phone.setText(user.getUserPhone());
+                username.setText(user.getUserName());
+                userEmail.setText(user.getUserEmail());
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -177,8 +166,8 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        update.setEnabled(!name.getText().toString().equals(userModel.getUserName()) || !password.getText().toString().equals(userModel.getUserPassword())
-                                || !phone.getText().toString().equals(userModel.getUserPhone()));
+                        update.setEnabled(!name.getText().toString().equals(user.getUserName()) || !password.getText().toString().equals(user.getUserPassword())
+                                || !phone.getText().toString().equals(user.getUserPhone()));
                     }
 
 
@@ -191,8 +180,8 @@ public class ProfileFragment extends Fragment {
                 name.addTextChangedListener(textWatcher);
                 password.addTextChangedListener(textWatcher);
                 phone.addTextChangedListener(textWatcher);
-                if (userModel.getUri() != null) {
-                    Picasso.get().load(userModel.getUri()).into(profileImage, new com.squareup.picasso.Callback() {
+                if (user.getUri() != null) {
+                    Picasso.get().load(user.getUri()).into(profileImage, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
                             spinKitView.setVisibility(View.GONE);

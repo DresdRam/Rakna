@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -67,8 +68,8 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
         if (car.getBusy())
         {
             holder.carImage.setVisibility(View.VISIBLE);
-            holder.button.setAlpha(0);
-            holder.button.setText(context.getResources().getString(R.string.select));
+            holder.textView.setAlpha(0);
+            holder.textView.setText(context.getResources().getString(R.string.select));
         }
         else
         {
@@ -79,11 +80,8 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
                 holder.carImage.setTranslationX(-50);
             }
             if(booking.isBooked()){
-                holder.button.setAlpha(1f);
-                holder.button.setText(context.getResources().getString(R.string.booked));
-            }else{
-                holder.button.setAlpha(1f);
-                holder.button.setText(context.getResources().getString(R.string.select));
+                holder.textView.setAlpha(1f);
+                holder.textView.setText(context.getResources().getString(R.string.booked));
             }
         }
         holder.carImage.setImageResource(car.getCarImageResource());
@@ -99,13 +97,13 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView carImage;
-        Button button;
+        TextView textView;
         ConstraintLayout layout;
 
         ViewHolder(View itemView) {
             super(itemView);
             carImage = itemView.findViewById(R.id.iv_car);
-            button = itemView.findViewById(R.id.button_book_select);
+            textView = itemView.findViewById(R.id.button_book_select);
             layout = itemView.findViewById(R.id.car_item_layout);
             initButtonListener();
             initCarListener();
@@ -123,7 +121,7 @@ class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.ViewHolder> {
         }
 
         private void initButtonListener() {
-            button.setOnClickListener(new View.OnClickListener() {
+            textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (clickListener != null){

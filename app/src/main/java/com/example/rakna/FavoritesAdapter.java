@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    private final ArrayList<Favorite> favoritesData;
+    private  ArrayList<Favorite> favoritesData;
     private final Context mContext;
     private FavoritesItemClickListener mClickListener;
 
@@ -44,6 +44,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         holder.totalTextView.setText(favorite.getTotalSpots());
         holder.latitudeTextView.setText(String.valueOf(favorite.getLatitude()));
         holder.longitudeTextView.setText(String.valueOf(favorite.getLongitude()));
+
     }
 
     // total number of items
@@ -51,6 +52,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     public int getItemCount() {
         return favoritesData.size();
     }
+
 
 
     // stores and recycles views as they are scrolled off screen

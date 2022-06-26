@@ -1,10 +1,7 @@
 package com.example.rakna.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -12,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,11 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.rakna.BookingQR;
 import com.example.rakna.HomeActivity;
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
-import com.example.rakna.Pojo.UserModel;
+import com.example.rakna.Pojo.User;
 import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +42,8 @@ public class SettingsFragment extends Fragment {
     Button logout;
     Spinner spinner;
     SpinKitView spinKitView;
-    TextView username;
+    TextView username,qrcodeTxt;
+    ImageView imageViewQr;
     CircleImageView userImage;
     private boolean selected;
     View view;
@@ -56,6 +56,8 @@ public class SettingsFragment extends Fragment {
         setPreviousSelectedLang();
         setUserInfo();
         logoutAction();
+        qrcodeTxtAction();
+        imageViewQrAction();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -90,14 +92,14 @@ public class SettingsFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserModel userModel = snapshot.getValue(UserModel.class);
-                assert userModel != null;
-                username.setText(userModel.getUserName());
+                User user = snapshot.getValue(User.class);
+                assert user != null;
+                username.setText(user.getUserName());
                 userImage.setVisibility(View.INVISIBLE);
                 spinKitView.setVisibility(View.VISIBLE);
-                if (userModel.getUri() != null) {
+                if (user.getUri() != null) {
                     Picasso.get()
-                            .load(userModel.getUri())
+                            .load(user.getUri())
                             .into(userImage, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -133,6 +135,8 @@ public class SettingsFragment extends Fragment {
         selected = false;
         userImage = view.findViewById(R.id.imageView_settings_userImage);
         username = view.findViewById(R.id.textView_settings_userName);
+        qrcodeTxt = view.findViewById(R.id.qr_text);
+        imageViewQr = view.findViewById(R.id.qr_image);
     }
 
     private void logoutAction() {
@@ -159,5 +163,24 @@ public class SettingsFragment extends Fragment {
         } else if (language.equals(LocaleHelper.ARABIC)) {
             spinner.setSelection(1);
         }
+    }
+    private void qrcodeTxtAction(){
+        qrcodeTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), BookingQR.class));
+
+            }
+        });
+
+    }
+    private void imageViewQrAction(){
+        imageViewQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), BookingQR.class));
+            }
+        });
+
     }
 }

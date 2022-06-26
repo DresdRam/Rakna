@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,14 +48,14 @@
         android:layout_marginTop="100dp"
         android:layout_marginBottom="15dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/textview_language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/language"
-            android:textSize="16sp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="25dp"
+            android:src="@drawable/ic_baseline_language_24"
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/spinner_settings_languages"
@@ -74,9 +75,31 @@
             android:layout_centerInParent="true"
             android:background="@drawable/round_button"
             android:text="@string/logout"
+            android:textAllCaps="false"
             android:textSize="15dp"
-            android:textStyle="bold|italic"
-            android:textAllCaps="false" />
+            android:textStyle="bold|italic" />
+
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/textview_language"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_baseline_qr_code_24" />
+
+        <TextView
+            android:id="@+id/qr_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spinner_settings_languages"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="50dp"
+            android:layout_toEndOf="@id/qr_image"
+            android:text="@string/book_qr_code"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
 
     </RelativeLayout>
 

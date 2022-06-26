@@ -15,7 +15,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rakna.Pojo.UserModel;
+import com.example.rakna.Pojo.User;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -204,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                             String personName = acct.getDisplayName();
                             String personEmail = acct.getEmail();
                             Uri personPhoto = acct.getPhotoUrl();
-                            UserModel user = new UserModel(personName, personEmail, "+0000000000", personPhoto.toString());
+                            User user = new User(personName, personEmail, "+0000000000", personPhoto.toString());
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
                             Query query = databaseReference.orderByChild("userEmail").equalTo(personEmail);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -214,6 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                                         updateFirebaseData(user);
                                     } else {
                                         Toast.makeText(LoginActivity.this, R.string.emailAlready, Toast.LENGTH_SHORT).show();
+                                        goToHome();
                                     }
                                     goToHome();
                                     loadingDialog.dismiss();
@@ -264,7 +264,7 @@ public class LoginActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
-    private void updateFirebaseData(UserModel user) {
+    private void updateFirebaseData(User user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(auth.getCurrentUser().getUid()).setValue(user);
     }

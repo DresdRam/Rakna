@@ -58,4 +58,9 @@
     <string name="parkedBy">This Spot Is Parked By</string>
     <string name="bookedBy">This Spot Is Booked By</string>
     <string name="nonRaknaUser">Non Rakna User</string>
+    <string name="search_Bar">Search</string>
+    <string name="no_parks_found">No Parks Found</string>
+    <string name="book_qr_code">Book QR Code</string>
+    <string name="Your_booking_code">Your Booking Qr Code Help you to Enter Park</string>
+    <string name="youhavenotBook">You haven\'t booked yet</string>
 </resources>

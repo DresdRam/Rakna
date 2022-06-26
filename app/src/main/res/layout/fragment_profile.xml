@@ -24,11 +24,11 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spinKit_profile"
+            style="@style/SpinKitView.DoubleBounce"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            style="@style/SpinKitView.DoubleBounce"/>
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:id="@+id/retrieved_name"
