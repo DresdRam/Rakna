@@ -37,7 +37,6 @@ public class BookingQR extends AppCompatActivity {
         initComponent();
         getCodeFromFirebase();
     }
-
     private void initComponent() {
         qrcode_image = findViewById(R.id.QrCode);
         desc = findViewById(R.id.description);
