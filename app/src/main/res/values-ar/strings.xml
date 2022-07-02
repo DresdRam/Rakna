@@ -57,4 +57,9 @@
     <string name="parkedBy">هذا المكان ركن فيه</string>
     <string name="bookedBy">هذا المكان حجزه</string>
     <string name="nonRaknaUser">شخص ليس من مستخدمين ركنة</string>
+    <string name="search_Bar">ابحث</string>
+    <string name="no_parks_found">لا يوجد اماكن</string>
+    <string name="book_qr_code">كود الحجز</string>
+    <string name="Your_booking_code">كود الحجز هذا يمكنك من دخول مكان الركن</string>
+    <string name="youhavenotBook">لم تحجز بعد</string>
 </resources>

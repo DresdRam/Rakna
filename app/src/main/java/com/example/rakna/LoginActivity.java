@@ -46,6 +46,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Random;
+
 public class LoginActivity extends AppCompatActivity {
 
     TextView registerTxt;
@@ -203,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                             String personName = acct.getDisplayName();
                             String personEmail = acct.getEmail();
                             Uri personPhoto = acct.getPhotoUrl();
-                            User user = new User(personName, personEmail, "+0000000000", personPhoto.toString());
+                            User user = new User(personName, personEmail, "+0000000000", personPhoto.toString(), getRandomKey(16));
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
                             Query query = databaseReference.orderByChild("userEmail").equalTo(personEmail);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -297,6 +299,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private String getRandomKey(int sizeOfKeyString) {
+        Random random = new Random();
+        String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+        StringBuilder sb = new StringBuilder(sizeOfKeyString);
+
+        for (int i = 0; i < sizeOfKeyString; ++i) {
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+
+        }
+        return sb.toString();
     }
 
     @Override
