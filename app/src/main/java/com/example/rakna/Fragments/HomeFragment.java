@@ -2,7 +2,6 @@ package com.example.rakna.Fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,13 +14,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,12 +30,8 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -82,7 +78,7 @@ import java.util.Objects;
 public class HomeFragment extends Fragment implements RoutingListener, OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
 
     private static final String TAG = "MapsFragment";
-    private final String GOOGLE_API_KEY = "AIzaSyAG9B9kFnwVFhS19WeWv27t-PNrixyYssg";
+    private final String GOOGLE_API_KEY = "AIzaSyBaXYS8Cxu01QopPemlAXqKh_Rl4ZLQiUw";
     private final String PARKING_PLACE = "Parking Place";
     private Routing routing;
     private GoogleMap mMap;
@@ -96,6 +92,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private boolean dialogIsShown;
     private boolean firstLaunch;
     private Location userLastKnownLocation;
+    private Polyline singlePolyLine;
+    public static boolean isRouting = false;
     View view;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationRequest;
@@ -358,7 +356,12 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     public void navigateToParkingPlace() {
         dismissBottomSheet();
         cancelRouting();
-        route();
+        if(!isRouting){
+            route();
+            isRouting = true;
+        }else{
+            isRouting = false;
+        }
     }
 
     @Override
@@ -389,9 +392,18 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private void cancelRouting() {
         if (routing != null) {
             routing.cancel(true);
+            removeMapPolyLines();
         }
     }
 
+    private void removeMapPolyLines(){
+        for (Polyline pol :
+                polyLines) {
+            pol.remove();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void spectateParkingPlace() {
         dismissBottomSheet();
         Intent intent = new Intent(getActivity(), ParkingPlaceActivity.class);
@@ -520,11 +532,11 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         for (int i = 0; i < routes.size(); i++) {
 
             if (i == shortestRouteIndex) {
-                polyOptions.color(getResources().getColor(R.color.red));
-                polyOptions.width(5);
+                polyOptions.color(getResources().getColor(R.color.primary));
+                polyOptions.width(15);
                 polyOptions.addAll(routes.get(shortestRouteIndex).getPoints());
-                Polyline polyline = mMap.addPolyline(polyOptions);
-                polyLines.add(polyline);
+                singlePolyLine = mMap.addPolyline(polyOptions);
+                polyLines.add(singlePolyLine);
 
             }
         }
@@ -532,7 +544,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
 
     @Override
     public void onRoutingCancelled() {
-        route();
+        Log.i("Routing", "Canceled");
     }
 
 }

@@ -65,4 +65,5 @@
     <string name="youhavenotBook">You haven\'t booked yet</string>
     <string name="book">Book</string>
     <string name="cancelBooking">Cancel Booking</string>
+    <string name="cancelRouting">Cancel Routing</string>
 </resources>

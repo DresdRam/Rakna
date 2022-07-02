@@ -1,12 +1,14 @@
 package com.example.rakna;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -216,6 +218,7 @@ public class HomeActivity extends AppCompatActivity implements HomeCommunicator 
         homeFragment.navigateToParkingPlace();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void spectateParkingLocation() {
         homeFragment.spectateParkingPlace();

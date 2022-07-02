@@ -59,5 +59,10 @@ public class MapBottomSheetFragment extends BottomSheetDialogFragment {
         navigateBtn = view.findViewById(R.id.button_navigate);
         spectateBtn = view.findViewById(R.id.button_spectate);
         activity = (HomeCommunicator) getActivity();
+        if(!HomeFragment.isRouting){
+            navigateBtn.setText(getResources().getString(R.string.navigate));
+        }else {
+            navigateBtn.setText(getResources().getString(R.string.cancelRouting));
+        }
     }
 }
