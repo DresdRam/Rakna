@@ -111,7 +111,7 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String location = snapshot.child("Users").child(firebaseUser.getUid()).child("location").getValue(String.class);
                 String carSpot = snapshot.child("Users").child(firebaseUser.getUid()).child("carSpot").getValue(String.class);
-                if(!Objects.equals(location, "") || !Objects.equals(carSpot, "")){
+                if (!Objects.equals(location, "") || !Objects.equals(carSpot, "")) {
                     removeBooking(location, carSpot);
                 }
             }
@@ -194,7 +194,7 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
             public void onDataChange(DataSnapshot snapshot) {
                 userName = snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userName").getValue().toString();
                 if (snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("booked").exists())
-                alreadyBooked = snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("booked").getValue(boolean.class);
+                    alreadyBooked = snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("booked").getValue(boolean.class);
                 if (alreadyBooked) {
                     bookBtn.setEnabled(false);
                     cancelButton.setVisibility(View.VISIBLE);
@@ -492,18 +492,16 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
     }
 
     private void checkQrCode(String QR) {
-        databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                    databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").
-                            setValue(QR).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    startActivity(new Intent(ParkingPlaceActivity.this,BookingQRActivity.class));
-                                }
-                            });
-                }
+                databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").
+                        setValue(QR).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                startActivity(new Intent(ParkingPlaceActivity.this, BookingQRActivity.class));
+                            }
+                        });
             }
 
             @Override
