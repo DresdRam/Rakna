@@ -62,4 +62,6 @@
     <string name="book_qr_code">كود الحجز</string>
     <string name="Your_booking_code">كود الحجز هذا يمكنك من دخول مكان الركن</string>
     <string name="youhavenotBook">لم تحجز بعد</string>
+    <string name="book">احجز</string>
+    <string name="cancelBooking">الغاء الحجز</string>
 </resources>
