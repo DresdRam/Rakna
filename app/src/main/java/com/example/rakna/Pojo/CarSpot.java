@@ -6,6 +6,7 @@ public class CarSpot {
     private String userName;
     private String uid;
     private boolean isParked;
+    private String QR;
 
     public CarSpot(int spotNumber, boolean isBooked, String userName, String uid, boolean isParked) {
         this.spotNumber = spotNumber;
@@ -76,4 +77,11 @@ public class CarSpot {
         isParked = parked;
     }
 
+    public String getQR() {
+        return QR;
+    }
+
+    public void setQR(String QR) {
+        this.QR = QR;
+    }
 }

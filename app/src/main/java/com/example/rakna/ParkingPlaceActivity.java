@@ -44,6 +44,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -55,7 +56,7 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
     TextView freeTextView, currentAnimatedButton;
     ImageButton backButton, addToFavoritesBtn;
     ImageView currentAnimatedCar;
-    Button bookBtn;
+    Button bookBtn, cancelButton;
     CircularProgressIndicator loadingAnimation;
     RelativeLayout relativeLayout;
     private ArrayList<Car> parkedCars;
@@ -74,8 +75,9 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
     private Random random;
     private Favorite favorite;
     private String userName;
-    private static final SecureRandom secureRandom = new SecureRandom();
-    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+    private final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
 
     @Override
@@ -91,7 +93,45 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         startLoadingAnimation();
         setupFireBase();
         bookBtnAction();
+        cancelBookingBtnAction();
+    }
 
+    private void cancelBookingBtnAction() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAllBookingInfo();
+            }
+        });
+    }
+
+    private void getAllBookingInfo() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String location = snapshot.child("Users").child(firebaseUser.getUid()).child("location").getValue(String.class);
+                String carSpot = snapshot.child("Users").child(firebaseUser.getUid()).child("carSpot").getValue(String.class);
+                if(!Objects.equals(location, "") || !Objects.equals(carSpot, "")){
+                    removeBooking(location, carSpot);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void removeBooking(String location, String carSpot) {
+        databaseReference.child("Users").child(firebaseUser.getUid()).child("booked").setValue(false);
+        databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").setValue("None");
+        databaseReference.child("Users").child(firebaseUser.getUid()).child("location").setValue("None");
+        databaseReference.child("Users").child(firebaseUser.getUid()).child("carSpot").setValue("None");
+        databaseReference.child("Booking").child(location).child(carSpot).child("booked").setValue(false);
+        databaseReference.child("Booking").child(location).child(carSpot).child("uid").setValue("None");
+        databaseReference.child("Booking").child(location).child(carSpot).child("QR").setValue("None");
+        databaseReference.child("Booking").child(location).child(carSpot).child("userName").setValue("None");
     }
 
     private void initBackBtnListener() {
@@ -129,6 +169,7 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         addressTextView = findViewById(R.id.textView_address);
         freeTextView = findViewById(R.id.textView_free);
         bookBtn = findViewById(R.id.book_btn);
+        cancelButton = findViewById(R.id.cancel_btn);
         backButton = findViewById(R.id.button_back_arrow);
         addToFavoritesBtn = findViewById(R.id.button_add_to_favorites);
         loadingAnimation = findViewById(R.id.circular_progress_indicator);
@@ -156,8 +197,10 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
                 alreadyBooked = snapshot.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("booked").getValue(boolean.class);
                 if (alreadyBooked) {
                     bookBtn.setEnabled(false);
+                    cancelButton.setVisibility(View.VISIBLE);
                 } else {
                     bookBtn.setEnabled(true);
+                    cancelButton.setVisibility(View.INVISIBLE);
                 }
                 parkingPlace = snapshot.child("Parking").child("Parking Locations").child(parkingPlaceName).getValue(ParkingPlace.class);
                 assert parkingPlace != null;
@@ -407,16 +450,21 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         for (int i = 0; i < booleanParkedCars.size(); i++) {
             currentAnimatedButton = carsRecyclerview.getChildAt(i).findViewById(R.id.button_book_select);
             CarSpot carSpot = bookingList.get(i);
-            if (booleanParkedCars.get(i) != true) {
+            if (!booleanParkedCars.get(i)) {
                 if (!carSpot.isBooked()) {
+                    String QR = generateRandomKey();
                     carSpot.setBooked(true);
                     carSpot.setParked(false);
                     carSpot.setUserName(userName);
                     carSpot.setUid(firebaseUser.getUid());
+                    carSpot.setQR(QR);
+                    checkQrCode(QR);
                     databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(i)).setValue(carSpot);
                     databaseReference.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("booked").setValue(true);
-                    databaseReference.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Carspot").setValue(String.valueOf(i));
+                    databaseReference.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("location").setValue(parkingPlaceName);
+                    databaseReference.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("carSpot").setValue(String.valueOf(i));
                     currentAnimatedButton.setText(getResources().getString(R.string.booked));
+                    bookBtn.setEnabled(false);
                     break;
                 }
             }
@@ -428,29 +476,31 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
             @Override
             public void onClick(View view) {
                 checkCarSpots();
-                checkQrCode();
-                bookBtn.setEnabled(false);
             }
         });
 
     }
 
-    public static String generateNewToken() {
-        byte[] randomBytes = new byte[24];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
+    private String generateRandomKey() {
+        final Random random = new Random();
+        final StringBuilder sb = new StringBuilder(16);
+
+        for (int i = 0; i < 16; ++i) {
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        }
+        return sb.toString();
     }
 
-    private void checkQrCode() {
+    private void checkQrCode(String QR) {
         databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
                     databaseReference.child("Users").child(firebaseUser.getUid()).child("BookCode").
-                            setValue(generateNewToken()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            setValue(QR).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    startActivity(new Intent(ParkingPlaceActivity.this,BookingQR.class));
+                                    startActivity(new Intent(ParkingPlaceActivity.this,BookingQRActivity.class));
                                 }
                             });
                 }

@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rakna">
         <activity
-            android:name=".BookingQR"
+            android:name=".BookingQRActivity"
             android:exported="false" />
 
         <meta-data

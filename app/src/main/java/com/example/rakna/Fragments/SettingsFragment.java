@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.rakna.BookingQR;
+import com.example.rakna.BookingQRActivity;
 import com.example.rakna.HomeActivity;
 import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
@@ -168,7 +168,7 @@ public class SettingsFragment extends Fragment {
         qrcodeTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), BookingQR.class));
+                startActivity(new Intent(getActivity(), BookingQRActivity.class));
 
             }
         });
@@ -178,7 +178,7 @@ public class SettingsFragment extends Fragment {
         imageViewQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), BookingQR.class));
+                startActivity(new Intent(getActivity(), BookingQRActivity.class));
             }
         });
 

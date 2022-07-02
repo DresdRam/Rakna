@@ -61,6 +61,8 @@
     <string name="search_Bar">Search</string>
     <string name="no_parks_found">No Parks Found</string>
     <string name="book_qr_code">Book QR Code</string>
-    <string name="Your_booking_code">Your Booking Qr Code Help you to Enter Park</string>
+    <string name="Your_booking_code">Your Booking Qr Code Allows You to Enter The Parking Location</string>
     <string name="youhavenotBook">You haven\'t booked yet</string>
+    <string name="book">Book</string>
+    <string name="cancelBooking">Cancel Booking</string>
 </resources>
