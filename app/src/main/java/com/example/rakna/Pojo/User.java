@@ -7,9 +7,9 @@ public class User {
     private String userEmail;
     private String userPhone;
     private String uri;
+    private boolean booked;
 
     public User() {
-
     }
 
     public User(String userName, String userEmail, String userPhone, String uri) {
@@ -31,6 +31,15 @@ public class User {
         this.userPassword = userPassword;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
+    }
+
+    public User(String userUid, String userName, String userPassword, String userEmail, String userPhone, boolean booked) {
+        this.userUid = userUid;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.booked = booked;
     }
 
     public User(String userUid, String userName, String userPassword, String userEmail, String userPhone, String uri) {
@@ -88,5 +97,13 @@ public class User {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public boolean isBooked() {
+        return booked;
+    }
+
+    public void setBooked(boolean booked) {
+        this.booked = booked;
     }
 }

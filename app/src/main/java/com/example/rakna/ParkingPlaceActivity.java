@@ -132,6 +132,7 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         databaseReference.child("Booking").child(location).child(carSpot).child("uid").setValue("None");
         databaseReference.child("Booking").child(location).child(carSpot).child("QR").setValue("None");
         databaseReference.child("Booking").child(location).child(carSpot).child("userName").setValue("None");
+        currentAnimatedButton.setText("");
     }
 
     private void initBackBtnListener() {
