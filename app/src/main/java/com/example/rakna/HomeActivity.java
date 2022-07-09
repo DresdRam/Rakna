@@ -25,7 +25,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-public class HomeActivity extends AppCompatActivity implements HomeCommunicator {
+public class HomeActivity extends AppCompatActivity implements HomeCommunicator , SettingsCommunicator {
 
     BottomNavigationView navigationView;
     FrameLayout frameLayout;
@@ -229,5 +229,10 @@ public class HomeActivity extends AppCompatActivity implements HomeCommunicator 
         showHomeFragment(R.id.nav_home);
         navigationView.setSelectedItemId(R.id.nav_home);
         homeFragment.zoomToMarker(latLng);
+    }
+
+    @Override
+    public void changeTrafficMode(boolean isEnabled) {
+        homeFragment.setTrafficEnabled(isEnabled);
     }
 }

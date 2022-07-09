@@ -66,4 +66,5 @@
     <string name="book">Book</string>
     <string name="cancelBooking">Cancel Booking</string>
     <string name="cancelRouting">Cancel Routing</string>
+    <string name="enable_traffic_mode">Enable Traffic Mode</string>
 </resources>

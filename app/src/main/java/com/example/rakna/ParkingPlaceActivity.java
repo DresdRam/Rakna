@@ -130,8 +130,12 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         databaseReference.child("Users").child(firebaseUser.getUid()).child("carSpot").setValue("None");
         databaseReference.child("Booking").child(location).child(carSpot).child("booked").setValue(false);
         databaseReference.child("Booking").child(location).child(carSpot).child("uid").setValue("None");
-        databaseReference.child("Booking").child(location).child(carSpot).child("QR").setValue("None");
-        databaseReference.child("Booking").child(location).child(carSpot).child("userName").setValue("None");
+        databaseReference.child("Booking").child(location).child(carSpot).child("qr").setValue("None");
+        removeBookButtonText(Integer.parseInt(carSpot));
+    }
+
+    private void removeBookButtonText(int position){
+        currentAnimatedButton = carsRecyclerview.getChildAt(position).findViewById(R.id.button_book_select);
         currentAnimatedButton.setText("");
     }
 
@@ -305,6 +309,8 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         moveAnimation.start();
         fadeAnimation.start();
         fadeAnimation2.start();
+        setDefaultBookValues(position, false, false);
+        removeBookButtonText(position);
     }
 
     private void animateParkingCar(int position) {
@@ -326,13 +332,13 @@ public class ParkingPlaceActivity extends AppCompatActivity implements ParkingIt
         moveAnimation.start();
         fadeAnimation.start();
         fadeAnimation2.start();
-        setBookedToFalse(position);
-
+        setDefaultBookValues(position, true, false);
+        removeBookButtonText(position);
     }
 
-    private void setBookedToFalse(int position) {
-        CarSpot carSpot = new CarSpot(position, false);
-        databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(position)).setValue(carSpot);
+    private void setDefaultBookValues(int position, boolean isParked, boolean isBooked) {
+        databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(position)).child("parked").setValue(isParked);
+        databaseReference.child("Booking").child(parkingPlaceName).child(String.valueOf(position)).child("booked").setValue(isBooked);
     }
 
     private void setupCarsData() {

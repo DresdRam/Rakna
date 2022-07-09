@@ -42,16 +42,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/settings_background_shape2"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginTop="100dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/settings_background_shape2">
 
         <ImageView
             android:id="@+id/textview_language"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="25dp"
             android:src="@drawable/ic_baseline_language_24"
@@ -68,6 +68,7 @@
             android:layout_toEndOf="@id/textview_language"
             android:entries="@array/language_entries" />
 
+
         <Button
             android:id="@+id/button_logout"
             android:layout_width="220dp"
@@ -81,12 +82,13 @@
 
         <ImageView
             android:id="@+id/qr_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_below="@id/textview_language"
             android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
             android:src="@drawable/ic_baseline_qr_code_24" />
+
 
         <TextView
             android:id="@+id/qr_text"
@@ -94,12 +96,44 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/spinner_settings_languages"
             android:layout_marginStart="27dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="41dp"
             android:layout_toEndOf="@id/qr_image"
             android:text="@string/book_qr_code"
             android:textColor="@color/black"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
+
+        <ImageView
+            android:id="@+id/traffic_mode_image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/qr_image"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_traffic" />
+
+
+        <TextView
+            android:id="@+id/traffic_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/qr_image"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="35dp"
+            android:layout_toEndOf="@id/traffic_mode_image"
+            android:text="@string/enable_traffic_mode"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_traffic_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/qr_image"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toEndOf="@id/traffic_mode_image"/>
 
     </RelativeLayout>
 

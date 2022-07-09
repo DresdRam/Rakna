@@ -1,5 +1,6 @@
 package com.example.rakna.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,9 +26,11 @@ import com.example.rakna.LocaleHelper;
 import com.example.rakna.LoginActivity;
 import com.example.rakna.R;
 import com.example.rakna.Pojo.User;
+import com.example.rakna.SettingsCommunicator;
 import com.firebase.ui.auth.AuthUI;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,10 +47,11 @@ public class SettingsFragment extends Fragment {
     Button logout;
     Spinner spinner;
     SpinKitView spinKitView;
-    TextView username,qrcodeTxt;
+    TextView username, qrcodeTxt;
     ImageView imageViewQr;
     CircleImageView userImage;
-    private boolean selected;
+    SwitchMaterial trafficModeSwitch;
+    private boolean selected, trafficModeEnabled;
     View view;
 
     @Override
@@ -53,6 +59,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         initComponent();
+        setTrafficModeSwitch();
         setPreviousSelectedLang();
         setUserInfo();
         logoutAction();
@@ -84,7 +91,26 @@ public class SettingsFragment extends Fragment {
                 //Do nothing
             }
         });
+
+        trafficModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("My_PREFERENCES", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("TrafficModeEnabled", b);
+                editor.apply();
+                SettingsCommunicator communicator = (SettingsCommunicator) getActivity();
+                communicator.changeTrafficMode(b);
+            }
+        });
+
         return view;
+    }
+
+    private void setTrafficModeSwitch() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("My_PREFERENCES", Context.MODE_PRIVATE);
+        trafficModeEnabled = sharedPreferences.getBoolean("TrafficModeEnabled", false);
+        trafficModeSwitch.setChecked(trafficModeEnabled);
     }
 
     private void setUserInfo() {
@@ -137,6 +163,7 @@ public class SettingsFragment extends Fragment {
         username = view.findViewById(R.id.textView_settings_userName);
         qrcodeTxt = view.findViewById(R.id.qr_text);
         imageViewQr = view.findViewById(R.id.qr_image);
+        trafficModeSwitch = view.findViewById(R.id.switch_traffic_mode);
     }
 
     private void logoutAction() {
@@ -164,7 +191,8 @@ public class SettingsFragment extends Fragment {
             spinner.setSelection(1);
         }
     }
-    private void qrcodeTxtAction(){
+
+    private void qrcodeTxtAction() {
         qrcodeTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,13 +202,18 @@ public class SettingsFragment extends Fragment {
         });
 
     }
-    private void imageViewQrAction(){
+
+    private void imageViewQrAction() {
         imageViewQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), BookingQRActivity.class));
             }
         });
+
+    }
+
+    private void setTrafficEnabled() {
 
     }
 }

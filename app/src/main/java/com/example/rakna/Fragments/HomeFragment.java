@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     private List<Polyline> polyLines = null;
     private ArrayList<LatLng> placesCoordinates;
     private MapBottomSheetFragment bottomSheetFragment;
-    private boolean dialogIsShown;
+    private boolean dialogIsShown, trafficModeEnabled;
     private boolean firstLaunch;
     private Location userLastKnownLocation;
     private Polyline singlePolyLine;
@@ -127,26 +128,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         initActivityResultLauncher();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
-        createDummyData();
         return view;
-    }
-
-    private void createDummyData() {
-        CarSpot carSpot = new CarSpot(0, true, "Mahmoud Salah");
-        CarSpot carSpot1 = new CarSpot(1, false);
-        CarSpot carSpot2 = new CarSpot(2, true, "Mohammed Hossam");
-        CarSpot carSpot3 = new CarSpot(3, false);
-        CarSpot carSpot4 = new CarSpot(4, true, "Mahmoud Magdy");
-        ArrayList<CarSpot> carSpots = new ArrayList<>();
-        ArrayList<String> users = new ArrayList<>();
-        users.add("carSpot");
-        users.add("");
-        users.add("");
-        users.add("");
-        users.add("carSpot4");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Parking").child("Parked").child("14 Abou Bakr El-Sedeek, Al Bitash Sharq, Dekhela, Alexandria Governorate");
-        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Booking").child("14 Abou Bakr El-Sedeek, Al Bitash Sharq, Dekhela, Alexandria Governorate");
-        reference.setValue(users);
     }
 
     public void zoomToNearestMarker() {
@@ -202,6 +184,8 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences("My_PREFERENCES", Context.MODE_PRIVATE);
+        trafficModeEnabled = sharedpreferences.getBoolean("TrafficModeEnabled", false);
     }
 
     private void initActivityResultLauncher() {
@@ -235,7 +219,7 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setTrafficEnabled(true);
+        mMap.setTrafficEnabled(trafficModeEnabled);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMarkerDragListener(this);
@@ -448,6 +432,14 @@ public class HomeFragment extends Fragment implements RoutingListener, OnMapRead
             showBottomSheet();
         }
         return true;
+    }
+
+    public void setTrafficEnabled(boolean isEnabled){
+        mMap.setTrafficEnabled(isEnabled);
+        SharedPreferences sharedpreferences = getActivity().getSharedPreferences("My_PREFERENCES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean("TrafficModeEnabled", isEnabled);
+        editor.apply();
     }
 
     private void showBottomSheet() {

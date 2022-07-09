@@ -65,4 +65,5 @@
     <string name="book">احجز</string>
     <string name="cancelBooking">الغاء الحجز</string>
     <string name="cancelRouting">اخفاء الاتجاهات</string>
+    <string name="enable_traffic_mode">تشغيل وضع المرور</string>
 </resources>
