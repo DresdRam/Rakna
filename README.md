@@ -24,16 +24,16 @@ Choose your preferred emulator or connect your Android device to run the Rakna a
 
 ## Usage
 1. **Launch the App:**\
-Open the Rakna app on your Android device.\
+Open the Rakna app on your Android device.
 
 2. **Explore Nearby Garages:**\
-Use the garage locator to discover parking options in your vicinity.\
+Use the garage locator to discover parking options in your vicinity.
 
 3. **Book a Parking Space:**\
-Reserve your desired parking space seamlessly through the app.\
+Reserve your desired parking space seamlessly through the app.
 
 4. **QR Code Entry:**\
-After booking, the app will provide a QR code. Use it to enter the garage and locate your parking space.\
+After booking, the app will provide a QR code. Use it to enter the garage and locate your parking space.
 
 5. **Real-time Updates:**\
 Stay informed with the real-time observer for parking space availability.
