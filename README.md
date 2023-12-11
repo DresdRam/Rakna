@@ -16,27 +16,27 @@ Rakna is an Android application designed to make parking hassle-free by providin
    ```bash
    git clone https://github.com/DresdRam/Rakna.git
    
-2. **Open in Android Studio:**
+2. **Open in Android Studio:**\
 Open the project in Android Studio and let the IDE handle the dependencies.
 
-3. **Run on Emulator or Device:**
+3. **Run on Emulator or Device:**\
 Choose your preferred emulator or connect your Android device to run the Rakna app.
 
 ## Usage
-Launch the App:
-Open the Rakna app on your Android device.
+1. **Launch the App:**\
+Open the Rakna app on your Android device.\
 
-Explore Nearby Garages:
-Use the garage locator to discover parking options in your vicinity.
+2. **Explore Nearby Garages:**\
+Use the garage locator to discover parking options in your vicinity.\
 
-Book a Parking Space:
-Reserve your desired parking space seamlessly through the app.
+3. **Book a Parking Space:**\
+Reserve your desired parking space seamlessly through the app.\
 
-QR Code Entry:
-After booking, the app will provide a QR code. Use it to enter the garage and locate your parking space.
+4. **QR Code Entry:**\
+After booking, the app will provide a QR code. Use it to enter the garage and locate your parking space.\
 
-Real-time Updates:
+5. **Real-time Updates:**\
 Stay informed with the real-time observer for parking space availability.
 
-License
+## License
 This project is licensed under the MIT License.
