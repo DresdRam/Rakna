@@ -47,6 +47,5 @@ Stay informed with the real-time observer for parking space availability.
 ![1708830253532](https://github.com/DresdRam/Rakna/assets/65346053/a4daf297-9e21-4bec-8ddd-46c6f4254a8d)
 ![1708830253522](https://github.com/DresdRam/Rakna/assets/65346053/43130f7f-85f0-42f6-b186-7bf5f9848cf2)
 ![1708830253512](https://github.com/DresdRam/Rakna/assets/65346053/8bb4b078-e26a-4f02-9448-c471d192e9d5)
-![1708830253503](https://github.com/DresdRam/Rakna/assets/65346053/5f31cd51-74df-4407-b539-932547c8ac45)
 
 
